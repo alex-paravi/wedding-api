@@ -13,4 +13,9 @@ class GuestController extends Controller
         $guest = Guest::create($data);
         return response()->json($guest, 201);
     }
+    public function index()
+    {
+        $guests = Guest::all();
+        return response()->json($guests, 200);
+    }
 }

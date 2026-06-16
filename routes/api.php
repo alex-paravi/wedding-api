@@ -8,3 +8,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 Route::post('/guests', [GuestController::class, 'store']);
+Route::get('/guests', [GuestController::class, 'index']);
