@@ -18,4 +18,12 @@ class GuestController extends Controller
         $guests = Guest::all();
         return response()->json($guests, 200);
     }
+    public function show($id)
+    {
+        $guest = Guest::find($id);
+        if (!$guest) {
+            return response()->json(['message' => 'Гость не найден'], 404);
+        }
+        return response()->json($guest, 200);
+    }
 }
