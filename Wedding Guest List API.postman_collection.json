@@ -1,0 +1,242 @@
+{
+  "info": {
+    "_postman_id": "51814112-bec0-4ae1-9cb3-f79232c16e27",
+    "name": "Wedding Guest List API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56109952",
+    "_collection_link": "https://go.postman.co/collection/56109952-51814112-bec0-4ae1-9cb3-f79232c16e27?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get All Guests",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "const template = `",
+              "<style>",
+              "  body { font-family: Arial, sans-serif; padding: 16px; }",
+              "  h2 { color: #333; }",
+              "  table { border-collapse: collapse; width: 100%; }",
+              "  th { background-color: #FF6C37; color: white; padding: 10px 14px; text-align: left; }",
+              "  td { padding: 8px 14px; border-bottom: 1px solid #ddd; }",
+              "  tr:hover { background-color: #f5f5f5; }",
+              "  .confirmed { color: green; font-weight: bold; }",
+              "  .not-confirmed { color: #999; }",
+              "</style>",
+              "<h2>Wedding Guest List ({{count}} guests)</h2>",
+              "<table>",
+              "  <thead>",
+              "    <tr>",
+              "      <th>#</th>",
+              "      <th>Name</th>",
+              "      <th>Confirmed</th>",
+              "      <th>Created At</th>",
+              "      <th>Updated At</th>",
+              "    </tr>",
+              "  </thead>",
+              "  <tbody>",
+              "    {{#each guests}}",
+              "    <tr>",
+              "      <td>{{id}}</td>",
+              "      <td>{{name}}</td>",
+              "      <td class=\"{{#if is_confirmed}}confirmed{{else}}not-confirmed{{/if}}\">",
+              "        {{#if is_confirmed}}✔ Yes{{else}}✘ No{{/if}}",
+              "      </td>",
+              "      <td>{{created_at}}</td>",
+              "      <td>{{updated_at}}</td>",
+              "    </tr>",
+              "    {{/each}}",
+              "  </tbody>",
+              "</table>",
+              "`;",
+              "",
+              "pm.visualizer.set(template, {",
+              "  guests: response,",
+              "  count: response.length",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/guests",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "guests"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Single Guest",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/guests/1",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "guests",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Guest",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Тестовый Гость из Postman\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/guests",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "guests"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Guest Status",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"is_confirmed\": 0\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/guests/5",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "guests",
+            "5"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Guest",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"is_confirmed\": 0\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/guests/5",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "guests",
+            "5"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
