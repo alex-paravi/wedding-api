@@ -20,12 +20,8 @@ class GuestController extends Controller
         $guests = Guest::all();
         return response()->json($guests, 200);
     }
-    public function show($id)
+    public function show(Guest $guest)
     {
-        $guest = Guest::find($id);
-        if (!$guest) {
-            return response()->json(['message' => 'Гость не найден'], 404);
-        }
         return response()->json($guest, 200);
     }
     public function update(UpdateGuestRequest $request, Guest $guest)
@@ -33,12 +29,8 @@ class GuestController extends Controller
         $guest->update($request->validated());
         return response()->json($guest, 200);
     }
-    public function destroy($id)
+    public function destroy(Guest $guest)
     {
-        $guest = Guest::find($id);
-        if (!$guest) {
-            return response()->json(['message' => 'Гость не найден'], 404);
-        }
         $guest->delete();
         return response()->json(null, 204);
     }

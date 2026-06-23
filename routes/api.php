@@ -9,6 +9,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 Route::post('/guests', [GuestController::class, 'store']);
 Route::get('/guests', [GuestController::class, 'index']);
-Route::get('/guests/{id}', [GuestController::class, 'show']);
-Route::patch('/guests/{id}', [GuestController::class, 'update']);
-Route::delete('/guests/{id}', [GuestController::class, 'destroy']);
+Route::get('/guests/{guest}', [GuestController::class, 'show']);
+Route::patch('/guests/{guest}', [GuestController::class, 'update']);
+Route::delete('/guests/{guest}', [GuestController::class, 'destroy']);
