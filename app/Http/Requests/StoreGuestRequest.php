@@ -29,7 +29,14 @@ class StoreGuestRequest extends FormRequest
                 'string',
                 'min:2',
                 'max:100',
+                'regex:/^[a-zA-Zа-яА-ЯёЁ\s\-]+$/u',
             ],
+        ];
+    }
+    public function messages(): array
+    {
+        return [
+            'name.regex' => 'Имя может содержать только буквы, пробелы и дефисы.'
         ];
     }
 }
