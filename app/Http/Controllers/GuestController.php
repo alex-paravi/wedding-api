@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGuestRequest;
+use App\Http\Requests\UpdateGuestRequest;
 use Illuminate\Http\Request;
 use App\Models\Guest;
 
@@ -10,7 +11,7 @@ class GuestController extends Controller
 {
     public function store(StoreGuestRequest $request)
     {
-        $validated = $request->validate();
+        $validated = $request->validated();
         $guest = Guest::create($validated);
         return response()->json($guest, 201);
     }
@@ -27,14 +28,14 @@ class GuestController extends Controller
         }
         return response()->json($guest, 200);
     }
-    public function update(Request $request, $id)
+    public function update(UpdateGuestRequest $request, $id)
     {
         $guest = Guest::find($id);
         if (!$guest) {
             return response()->json(['message' => 'Гость не найден'], 404);
         }
-        $data = $request->only(['is_confirmed']);
-        $guest->update($data);
+        $validated = $request->validated();
+        $guest->update($validated);
         return response()->json($guest, 200);
     }
     public function destroy($id)
