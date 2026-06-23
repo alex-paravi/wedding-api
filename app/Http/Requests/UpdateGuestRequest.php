@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Override;
 
 class UpdateGuestRequest extends FormRequest
 {
@@ -28,6 +29,13 @@ class UpdateGuestRequest extends FormRequest
                 'required',
                 'boolean',
             ],
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'is_confirmed.required' => 'Статус подтверждения обязателен для заполнения.',
+            'is_confirmed.boolean' => 'Статус подтверждения должен быть логического типа (true/false или 1/0).',
         ];
     }
 }

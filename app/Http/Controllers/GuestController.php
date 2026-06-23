@@ -28,14 +28,9 @@ class GuestController extends Controller
         }
         return response()->json($guest, 200);
     }
-    public function update(UpdateGuestRequest $request, $id)
+    public function update(UpdateGuestRequest $request, Guest $guest)
     {
-        $guest = Guest::find($id);
-        if (!$guest) {
-            return response()->json(['message' => 'Гость не найден'], 404);
-        }
-        $validated = $request->validated();
-        $guest->update($validated);
+        $guest->update($request->validated());
         return response()->json($guest, 200);
     }
     public function destroy($id)
