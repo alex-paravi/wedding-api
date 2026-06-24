@@ -6,6 +6,7 @@ use App\Http\Requests\StoreGuestRequest;
 use App\Http\Requests\UpdateGuestRequest;
 use Illuminate\Http\Request;
 use App\Models\Guest;
+use App\Http\Resources\GuestResource;
 
 class GuestController extends Controller
 {
@@ -13,21 +14,21 @@ class GuestController extends Controller
     {
         $validated = $request->validated();
         $guest = Guest::create($validated);
-        return response()->json($guest, 201);
+        return new GuestResource($guest);
     }
     public function index()
     {
         $guests = Guest::all();
-        return response()->json($guests, 200);
+        return GuestResource::collection($guests);
     }
     public function show(Guest $guest)
     {
-        return response()->json($guest, 200);
+        return new GuestResource($guest);
     }
     public function update(UpdateGuestRequest $request, Guest $guest)
     {
         $guest->update($request->validated());
-        return response()->json($guest, 200);
+        return new GuestResource($guest);
     }
     public function destroy(Guest $guest)
     {
