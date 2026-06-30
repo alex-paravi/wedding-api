@@ -26,6 +26,7 @@ class GuestController extends Controller
     {
         Gate::authorize('create', Guest::class);
 
+        // Если здесь стоит validated(), значит StoreGuestRequest настроен идеально!
         $validated = $request->validated();
 
         $validated['user_id'] = $request->user()->id;

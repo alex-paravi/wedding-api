@@ -21,7 +21,9 @@ class GuestPolicy
      */
     public function view(User $user, Guest $guest): bool
     {
-        return false;
+        // Администратор может смотреть любого гостя, 
+        // а обычный юзер — только того, кого создал сам
+        return $user->role === 'admin' || $user->id === $guest->user_id;
     }
 
     /**
@@ -29,7 +31,7 @@ class GuestPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
