@@ -12,13 +12,18 @@ class GuestResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray($request): array
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'is_confirmed' => (bool) $this->is_confirmed,
-            'registred_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'phone' => $this->phone,
+            'side' => $this->side,
+            'category' => $this->category,
+            'status' => $this->status,
+            'table_number' => $this->table_number,
+            'created_by' => $this->user_id,
+            'created_at' => $this->created_at->toDateTimeString(),
         ];
     }
 }

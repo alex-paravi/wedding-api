@@ -13,8 +13,13 @@ return new class extends Migration
     {
         Schema::create('guest', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->boolean('is_confirmed')->default(false);
+            $table->string('phone')->nullable();
+            $table->string('side');
+            $table->string('category');
+            $table->string('status');
+            $table->integer('table_number')->nullable();
             $table->timestamps();
         });
     }
