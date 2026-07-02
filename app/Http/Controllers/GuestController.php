@@ -13,12 +13,30 @@ class GuestController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->user()->role === 'admin') {
-            $guests = Guest::all();
-        } else {
-            $guests = Guest::where('user_id', $request->user()->id)->get();
+        // 1. Начинаем строить SQL-запрос. 
+        // Если админ — берём всех, если обычный юзер — только его гостей.
+        $query = Guest::query();
+
+        if ($request->user()->role !== 'admin') {
+            $query->where('user_id', $request->user()->id);
         }
 
+        // 2. Фильтр по стороне (groom/bride). 
+        // Если в URL есть ?side=..., то добавляем условие в базу
+        $query->when($request->has('side'), function ($q) use ($request) {
+            $q->where('side', $request->input('side'));
+        });
+
+        // 3. Фильтр по статусу присутствия (confirmed/pending/declined)
+        $query->when($request->has('status'), function ($q) use ($request) {
+            $q->where('status', $request->input('status'));
+        });
+
+        // 4. Вместо get() или all() включаем пагинацию! 
+        // Выводим по 5-10 записей для теста (давай поставим 10)
+        $guests = $query->paginate(10);
+
+        // 5. Возвращаем коллекцию через наш Ресурс
         return GuestResource::collection($guests);
     }
 
