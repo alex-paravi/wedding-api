@@ -8,9 +8,33 @@ use Illuminate\Http\Request;
 use App\Models\Guest;
 use App\Http\Resources\GuestResource;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class GuestController extends Controller
 {
+
+    /**
+     * Получить статистику по гостям для текущего пользователя.
+     */
+    public function stats(): JsonResponse
+    {
+        // Получаем ID текущего залогиненного пользователя
+        $userId = Auth::id();
+
+        // Делаем один быстрый запрос к базе: группируем гостей по полю 'status' и считаем их количество
+        $stats = \App\Models\Guest::where('user_id', $userId)
+            ->selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status'); // превратит в удобный массив ['confirmed' => 10, 'pending' => 5]
+
+        return response()->json([
+            'total' => $stats->sum(), // Общее количество
+            'confirmed' => $stats->get('confirmed', 0),
+            'pending' => $stats->get('pending', 0),
+            'declined' => $stats->get('declined', 0),
+        ]);
+    }
     public function index(Request $request)
     {
         // 1. Начинаем строить SQL-запрос. 

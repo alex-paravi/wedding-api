@@ -14,6 +14,8 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    // 📊 Добавляем роут статистики ВЫШЕ роута со сlug/id {guest}
+    Route::get('/guests/stats', [GuestController::class, 'stats']);
     Route::post('/guests', [GuestController::class, 'store']);
     Route::get('/guests', [GuestController::class, 'index']);
     Route::get('/guests/{guest}', [GuestController::class, 'show']);
