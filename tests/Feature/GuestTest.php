@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Guest;
 
 class GuestTest extends TestCase
 {
@@ -53,6 +54,42 @@ class GuestTest extends TestCase
         $this->assertDatabaseHas('guests', [
             'name' => 'Иван Иванов',
             'user_id' => $user->id // Проверяем, что контроллер правильно привязал ID юзера!
+        ]);
+    }
+
+    /**
+     * Проверяем, что юзер не может обновить чужого гостя.
+     */
+    /**
+     * Проверяем, что юзер не может обновить чужого гостя.
+     */
+    public function test_user_cannot_update_someone_elses_guest(): void
+    {
+        // 1. Создаём двух разных пользователей
+        $userOwner = User::factory()->create();
+        $userStranger = User::factory()->create();
+
+        // 2. Создаём гостя, который принадлежит первому пользователю (userOwner)
+        $guest = Guest::factory()->create([
+            'user_id' => $userOwner->id,
+        ]);
+
+        // 3. Данные для обновления
+        $updateData = [
+            'name' => 'Злобный Хакер',
+        ];
+
+        // 4. Пытаемся сделать PATCH-запрос от имени ВТОРОГО пользователя (userStranger)
+        $response = $this->actingAs($userStranger)
+            ->patchJson("/api/guests/{$guest->id}", $updateData);
+
+        // 5. Утверждаем, что сервер вернул статус 403 (Forbidden) — доступ запрещен!
+        $response->assertStatus(403);
+
+        // 6. Проверяем в базе, что имя гостя НЕ изменилось
+        $this->assertDatabaseHas('guests', [
+            'id' => $guest->id,
+            'name' => $guest->name, // осталось старым
         ]);
     }
 }
