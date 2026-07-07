@@ -23,7 +23,7 @@ class Guest extends Model
         'side',
         'category',
         'status',
-        'table_number',
+        'table_id',
     ];
 
     /**
@@ -33,5 +33,13 @@ class Guest extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Связь: Гость сидит за определённым столом (или ни за каким, если null).
+     */
+    public function table(): BelongsTo
+    {
+        return $this->belongsTo(Table::class);
     }
 }

@@ -35,7 +35,7 @@ class UpdateGuestRequest extends FormRequest
             'side' => ['sometimes', 'string', 'in:groom,bride'],
             'category' => ['sometimes', 'string', 'in:friend,relative,colleague'],
             'status' => ['sometimes', 'string', 'in:confirmed,pending,declined'],
-            'table_number' => ['nullable', 'integer', 'min:1'],
+            'table_id' => ['sometimes', 'nullable', 'exists:tables,id'],
         ];
     }
     public function messages()
@@ -45,8 +45,7 @@ class UpdateGuestRequest extends FormRequest
             'side.in' => 'Сторона должна быть строго: groom (жених) или bride (невеста).',
             'category.in' => 'Категория должна быть: friend, relative или colleague.',
             'status.in' => 'Статус должен быть: confirmed, pending или declined.',
-            'table_number.integer' => 'Номер стола должен быть целым числом.',
-            'table_number.min' => 'Номер стола не может быть меньше 1.',
+            'table_id.exists' => 'Выбранного стола не существует в системе.',
         ];
     }
 }

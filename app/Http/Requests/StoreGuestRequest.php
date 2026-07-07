@@ -27,7 +27,7 @@ class StoreGuestRequest extends FormRequest
             'side' => ['required', 'string', 'in:groom,bride'],
             'category' => ['required', 'string', 'in:friend,relative,colleague'],
             'status' => ['required', 'string', 'in:confirmed,pending,declined'],
-            'table_number' => ['nullable', 'integer'],
+            'table_id' => 'nullable|exists:tables,id',
         ];
     }
 

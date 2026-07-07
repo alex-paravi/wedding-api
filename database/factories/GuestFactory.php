@@ -24,7 +24,7 @@ class GuestFactory extends Factory
             'side' => fake()->randomElement(['groom', 'bride']),
             'category' => fake()->randomElement(['friend', 'relative', 'colleague']),
             'status' => 'pending', // по умолчанию все "в ожидании"
-            'table_number' => null, // изначально стола нет
+            'table_id' => null, // теперь гость ссылается на ID стола, а не на номер
 
             // Магия: если мы не передали user_id руками, фабрика сама создаст 
             // фейкового юзера "на лету" и возьмет его ID!

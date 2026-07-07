@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('guests', function (Blueprint $table) {
+        Schema::create('tables', function (Blueprint $table) {
             $table->id();
+            $table->string('name'); // Название стола, например: "VIP", "Друзья", "Стол №3"
+            $table->integer('capacity')->default(8); // Вместимость стола (по умолчанию 8 мест)
+
+            // Привязываем стол к создателю (пользователю)
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->string('phone')->nullable();
-            $table->string('side');
-            $table->string('category');
-            $table->string('status');
-            $table->integer('table_number')->nullable();
+
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('guest');
+        Schema::dropIfExists('tables');
     }
 };
