@@ -12,7 +12,7 @@ class GuestResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray($request): array
+    public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
@@ -21,9 +21,30 @@ class GuestResource extends JsonResource
             'side' => $this->side,
             'category' => $this->category,
             'status' => $this->status,
-            'table_number' => $this->table_number,
-            'created_by' => $this->user_id,
-            'created_at' => $this->created_at->toDateTimeString(),
+
+            // ID стола отдаем всегда (он может быть null, если гость не рассажен)
+            'table_id' => $this->table_id,
+
+            // Информацию о самом столе отдаем ТОЛЬКО если ее запросили через with('table')
+            'table' => $this->whenLoaded('table', function () {
+                return $this->table ? [
+                    'id' => $this->table->id,
+                    'number' => $this->table->number,
+                    'capacity' => $this->table->capacity,
+                ] : null;
+            }),
+
+            'user_id' => $this->user_id,
+
+            // Данные создателя отдаем только при eager loading через with('user')
+            'created_by' => $this->whenLoaded('user', function () {
+                return $this->user ? [
+                    'id' => $this->user->id,
+                    'name' => $this->user->name,
+                ] : null;
+            }),
+
+            'created_at' => $this->created_at?->toDateTimeString(),
         ];
     }
 }
