@@ -29,7 +29,7 @@ class GuestResource extends JsonResource
             'table' => $this->whenLoaded('table', function () {
                 return $this->table ? [
                     'id' => $this->table->id,
-                    'number' => $this->table->number,
+                    'name' => $this->table->name, // Изменено с 'number' на 'name'
                     'capacity' => $this->table->capacity,
                 ] : null;
             }),
