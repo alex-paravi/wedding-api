@@ -11,7 +11,8 @@ class TableController extends Controller
 {
     public function index()
     {
-        $tables = Table::with('guests')->get();
+        // Вместо ->get() используем ->paginate(10), указывая по сколько элементов выводить на страницу
+        $tables = Table::with('guests')->paginate(10);
         return TableResource::collection($tables);
     }
 
