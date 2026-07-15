@@ -15,6 +15,8 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    // Добавляем роут статистики ВЫШЕ apiResource столов
+    Route::get('/tables/stats', [TableController::class, 'stats']);
     Route::apiResource('tables', TableController::class);
 
     //  Добавляем роут статистики ВЫШЕ роута со сlug/id {guest}
