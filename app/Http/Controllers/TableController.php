@@ -7,9 +7,14 @@ use App\Http\Resources\TableResource;
 use App\Http\Requests\StoreTableRequest;
 use App\Http\Requests\UpdateTableRequest;
 use App\Models\Guest;
+use App\Services\TableService;
 
 class TableController extends Controller
 {
+    public function __construct(
+        protected TableService $tableService
+    ) {}
+
     public function index()
     {
         // Вместо ->get() используем ->paginate(10), указывая по сколько элементов выводить на страницу
@@ -52,24 +57,11 @@ class TableController extends Controller
 
     public function stats()
     {
-        // 1. Считаем сколько всего столов создано
-        $totalTables = Table::count();
+        // Контроллер больше ничего сам не считает! 
+        // Он просто просит сервис сделать расчеты
+        $stats = $this->tableService->getTableStatistics();
 
-        // 2. Считаем общую вместимость (суммируем колонку capacity всех столов)
-        $totalCapacity = Table::sum('capacity');
-
-        // 3. Считаем, сколько гостей уже привязано к столам (где table_id не null)
-        $occupiedSeats = Guest::whereNotNull('table_id')->count();
-
-        // 4. Вычисляем свободные места
-        $freeSeats = $totalCapacity - $occupiedSeats;
-
-        // Возвращаем аккуратный JSON-ответ
-        return response()->json([
-            'total_tables' => $totalTables,
-            'total_capacity' => $totalCapacity,
-            'occupied_seats' => $occupiedSeats,
-            'free_seats' => max(0, $freeSeats), // max(0, ...) защитит от ухода в минус, если гостей посадили больше вместимости
-        ]);
+        // И возвращает результат клиенту
+        return response()->json($stats);
     }
 }
