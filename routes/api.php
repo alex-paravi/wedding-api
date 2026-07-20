@@ -21,6 +21,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //  Добавляем роут статистики ВЫШЕ роута со сlug/id {guest}
     Route::get('/guests/stats', [GuestController::class, 'stats']);
+    // Маршрут для массовой генерации пригласительных
+    Route::get('/guests/generate-invitations', [GuestController::class, 'generateAllInvitations']);
     Route::post('/guests', [GuestController::class, 'store']);
     Route::get('/guests', [GuestController::class, 'index']);
     Route::get('/guests/{guest}', [GuestController::class, 'show']);

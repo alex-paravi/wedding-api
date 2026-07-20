@@ -10,6 +10,7 @@ use App\Http\Resources\GuestResource;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Invitations\InvitationFactory;
 
 class GuestController extends Controller
 {
@@ -98,5 +99,38 @@ class GuestController extends Controller
         $guest->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * Генерировать пригласительные для всех гостей.
+     */
+    public function generateAllInvitations()
+    {
+        // 1. Вытаскиваем всех гостей из базы данных SQLite
+        $guests = Guest::all();
+
+        // 2. Инициализируем нашу архитектурную фабрику
+        $factory = new InvitationFactory();
+
+        $result = [];
+
+        foreach ($guests as $guest) {
+            // 3. Фабрика на лету создает нужный класс (Web или Pdf) на основе $guest->category
+            $invitationWorker = $factory->make($guest);
+
+            // 4. Запускаем генерацию (сервер выполняет контрактный метод)
+            $result[] = [
+                'guest_name' => $guest->name,
+                'category'   => $guest->category,
+                // Сюда запишется либо URL-строка, либо путь к файлу на сервере
+                'invitation' => $invitationWorker->generate($guest),
+            ];
+        }
+
+        // 5. Отдаем чистый JSON-ответ фронтенду
+        return response()->json([
+            'success' => true,
+            'data'    => $result
+        ]);
     }
 }

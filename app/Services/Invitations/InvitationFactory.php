@@ -16,10 +16,10 @@ class InvitationFactory
     public function make(Guest $guest): InvitationInterface
     {
         switch ($guest->category) {
-            case 'friends':
+            case 'friend':
                 return new WebInvitation();
 
-            case 'relatives':
+            case 'relative':
                 return new PdfInvitation();
 
             default:
