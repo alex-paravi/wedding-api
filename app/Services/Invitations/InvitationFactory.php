@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace App\Services\Invitations;
 
 use App\Contracts\InvitationInterface;
 use App\Services\Invitations\WebInvitation;
