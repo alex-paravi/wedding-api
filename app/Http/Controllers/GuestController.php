@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Invitations\InvitationFactory;
+use App\Services\NotificationFactory;
 
 class GuestController extends Controller
 {
@@ -104,30 +105,37 @@ class GuestController extends Controller
     /**
      * Генерировать пригласительные для всех гостей.
      */
-    public function generateAllInvitations()
-    {
-        // 1. Вытаскиваем всех гостей из базы данных SQLite
+    public function generateAllInvitations(
+        InvitationFactory $invitationFactory,
+        NotificationFactory $notificationFactory
+    ): JsonResponse {
+        // 1. Вытаскиваем всех гостей
         $guests = Guest::all();
-
-        // 2. Инициализируем нашу архитектурную фабрику
-        $factory = new InvitationFactory();
 
         $result = [];
 
         foreach ($guests as $guest) {
-            // 3. Фабрика на лету создает нужный класс (Web или Pdf) на основе $guest->category
-            $invitationWorker = $factory->make($guest);
+            // 2. Фабрика приглашений создает пригласительное
+            $invitationWorker = $invitationFactory->make($guest);
+            $invitationLink = $invitationWorker->generate($guest);
 
-            // 4. Запускаем генерацию (сервер выполняет контрактный метод)
+            // 3. Фабрика уведомлений выбирает канал отправки (Email / Telegram)
+            $notificationSender = $notificationFactory->make($guest);
+
+            // 4. Формируем сообщение и выполняем отправку
+            $message = "Здравствуйте, {$guest->name}! Ваше приглашение: {$invitationLink}";
+            $isSent = $notificationSender->send($guest, $message);
+
+            // 5. Формируем итоговый массив
             $result[] = [
                 'guest_name' => $guest->name,
                 'category'   => $guest->category,
-                // Сюда запишется либо URL-строка, либо путь к файлу на сервере
-                'invitation' => $invitationWorker->generate($guest),
+                'invitation' => $invitationLink,
+                'notified'   => $isSent,
             ];
         }
 
-        // 5. Отдаем чистый JSON-ответ фронтенду
+        // 6. Отдаем JSON-ответ
         return response()->json([
             'success' => true,
             'data'    => $result
