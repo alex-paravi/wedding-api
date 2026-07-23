@@ -4,6 +4,7 @@ namespace App\Services\Invitations;
 
 use App\Contracts\InvitationInterface;
 use App\Models\Guest;
+use Illuminate\Support\Str;
 
 class WebInvitation implements InvitationInterface
 {
@@ -12,13 +13,18 @@ class WebInvitation implements InvitationInterface
      */
     public function generate(Guest $guest): string
     {
-        // Базовый URL нашего фронтенда для гостей
+        // 1. Генерируем уникальный токен (или берем существующий)
+        if (!$guest->invitation_token) {
+            $token = Str::random(32);
+            $guest->update(['invitation_token' => $token]);
+        } else {
+            $token = $guest->invitation_token;
+        }
+
+        // 2. Базовый URL нашего фронтенда для гостей
         $baseUrl = config('app.url') . '/invitation/';
 
-        // Генерируем уникальный хэш на основе ID гостя, чтобы ссылку нельзя было подобрать
-        $hash = md5($guest->id . 'wedding_secret_salt');
-
-        // Возвращаем красивую ссылку, по которой гость перейдет на красивую веб-страницу
-        return $baseUrl . $hash;
+        // 3. Возвращаем ссылку именно с $token!
+        return $baseUrl . $token;
     }
 }

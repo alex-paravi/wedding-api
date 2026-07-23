@@ -23,6 +23,10 @@ return new class extends Migration
             // nullable() — потому что гость может быть еще не рассажен за стол
             // nullOnDelete() — если стол удалят, гость не пропадет, а просто получит null в это поле
             $table->foreignId('table_id')->nullable()->constrained()->nullOnDelete();
+            // Уникальный токен для безопасного публичного доступа по ссылке
+            $table->string('invitation_token')->nullable()->unique();
+            // Пожелания по меню или информация об аллергиях
+            $table->string('dietary_preferences')->nullable();
             $table->timestamps();
         });
     }

@@ -24,6 +24,8 @@ class Guest extends Model
         'category',
         'status',
         'table_id',
+        'invitation_token',
+        'dietary_preferences',
     ];
 
     /**

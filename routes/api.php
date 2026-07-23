@@ -5,9 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\RsvpController;
 
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/invitations/{token}/rsvp', RsvpController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
 
