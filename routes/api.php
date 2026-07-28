@@ -6,7 +6,7 @@ use App\Http\Controllers\GuestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\RsvpController;
-
+use App\Http\Controllers\GuestStatsController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/invitations/{token}/rsvp', RsvpController::class);
@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tables', TableController::class);
 
     //  Добавляем роут статистики ВЫШЕ роута со сlug/id {guest}
-    Route::get('/guests/stats', [GuestController::class, 'stats']);
+    Route::get('/guests/stats', GuestStatsController::class);
     // Маршрут для массовой генерации пригласительных
     Route::get('/guests/generate-invitations', [GuestController::class, 'generateAllInvitations']);
     Route::post('/guests', [GuestController::class, 'store']);
