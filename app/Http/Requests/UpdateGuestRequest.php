@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Override;
 
 class UpdateGuestRequest extends FormRequest
@@ -32,9 +33,9 @@ class UpdateGuestRequest extends FormRequest
                 'regex:/^[a-zA-Zа-яА-ЯёЁ\s\-]+$/u'
             ],
             'phone' => ['nullable', 'string', 'max:20'],
-            'side' => ['sometimes', 'string', 'in:groom,bride'],
-            'category' => ['sometimes', 'string', 'in:friend,relative,colleague'],
-            'status' => ['sometimes', 'string', 'in:confirmed,pending,declined'],
+            'side' => ['sometimes', 'string', Rule::in(['groom', 'bride'])],
+            'category' => ['sometimes', 'string', Rule::in(['friend', 'relative', 'colleague', 'family'])],
+            'status' => ['sometimes', 'string', Rule::in(['pending', 'confirmed', 'declined'])],
             'table_id' => ['sometimes', 'nullable', 'exists:tables,id'],
         ];
     }
