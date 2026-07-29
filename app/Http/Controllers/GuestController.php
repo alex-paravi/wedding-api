@@ -8,61 +8,27 @@ use Illuminate\Http\Request;
 use App\Models\Guest;
 use App\Http\Resources\GuestResource;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use App\Services\Invitations\InvitationFactory;
-use App\Services\NotificationFactory;
 
 class GuestController extends Controller
 {
-
-    /**
-     * Получить статистику по гостям для текущего пользователя.
-     */
-    public function stats(): JsonResponse
-    {
-        // Получаем ID текущего залогиненного пользователя
-        $userId = Auth::id();
-
-        // Делаем один быстрый запрос к базе: группируем гостей по полю 'status' и считаем их количество
-        $stats = \App\Models\Guest::where('user_id', $userId)
-            ->selectRaw('status, count(*) as count')
-            ->groupBy('status')
-            ->pluck('count', 'status'); // превратит в удобный массив ['confirmed' => 10, 'pending' => 5]
-
-        return response()->json([
-            'total' => $stats->sum(), // Общее количество
-            'confirmed' => $stats->get('confirmed', 0),
-            'pending' => $stats->get('pending', 0),
-            'declined' => $stats->get('declined', 0),
-        ]);
-    }
     public function index(Request $request)
     {
-        // 1. Начинаем строить SQL-запрос. 
-        // Если админ — берём всех, если обычный юзер — только его гостей.
         $query = Guest::query();
 
         if ($request->user()->role !== 'admin') {
             $query->where('user_id', $request->user()->id);
         }
 
-        // 2. Фильтр по стороне (groom/bride). 
-        // Если в URL есть ?side=..., то добавляем условие в базу
         $query->when($request->has('side'), function ($q) use ($request) {
             $q->where('side', $request->input('side'));
         });
 
-        // 3. Фильтр по статусу присутствия (confirmed/pending/declined)
         $query->when($request->has('status'), function ($q) use ($request) {
             $q->where('status', $request->input('status'));
         });
 
-        // 4. Вместо get() или all() включаем пагинацию! 
-        // Выводим по 5-10 записей для теста (давай поставим 10)
         $guests = $query->paginate(10);
 
-        // 5. Возвращаем коллекцию через наш Ресурс
         return GuestResource::collection($guests);
     }
 
@@ -70,21 +36,21 @@ class GuestController extends Controller
     {
         Gate::authorize('create', Guest::class);
 
-        // Если здесь стоит validated(), значит StoreGuestRequest настроен идеально!
         $validated = $request->validated();
-
         $validated['user_id'] = $request->user()->id;
 
         $guest = Guest::create($validated);
 
         return new GuestResource($guest);
     }
+
     public function show(Guest $guest)
     {
         Gate::authorize('view', $guest);
 
         return new GuestResource($guest);
     }
+
     public function update(UpdateGuestRequest $request, Guest $guest)
     {
         Gate::authorize('update', $guest);
@@ -93,6 +59,7 @@ class GuestController extends Controller
 
         return new GuestResource($guest);
     }
+
     public function destroy(Guest $guest)
     {
         Gate::authorize('delete', $guest);
@@ -100,45 +67,5 @@ class GuestController extends Controller
         $guest->delete();
 
         return response()->json(null, 204);
-    }
-
-    /**
-     * Генерировать пригласительные для всех гостей.
-     */
-    public function generateAllInvitations(
-        InvitationFactory $invitationFactory,
-        NotificationFactory $notificationFactory
-    ): JsonResponse {
-        // 1. Вытаскиваем всех гостей
-        $guests = Guest::all();
-
-        $result = [];
-
-        foreach ($guests as $guest) {
-            // 2. Фабрика приглашений создает пригласительное
-            $invitationWorker = $invitationFactory->make($guest);
-            $invitationLink = $invitationWorker->generate($guest);
-
-            // 3. Фабрика уведомлений выбирает канал отправки (Email / Telegram)
-            $notificationSender = $notificationFactory->make($guest);
-
-            // 4. Формируем сообщение и выполняем отправку
-            $message = "Здравствуйте, {$guest->name}! Ваше приглашение: {$invitationLink}";
-            $isSent = $notificationSender->send($guest, $message);
-
-            // 5. Формируем итоговый массив
-            $result[] = [
-                'guest_name' => $guest->name,
-                'category'   => $guest->category,
-                'invitation' => $invitationLink,
-                'notified'   => $isSent,
-            ];
-        }
-
-        // 6. Отдаем JSON-ответ
-        return response()->json([
-            'success' => true,
-            'data'    => $result
-        ]);
     }
 }

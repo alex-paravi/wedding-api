@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\RsvpController;
 use App\Http\Controllers\GuestStatsController;
+use App\Http\Controllers\GenerateInvitationsController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/invitations/{token}/rsvp', RsvpController::class);
@@ -17,17 +18,14 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    // Добавляем роут статистики ВЫШЕ apiResource столов
+    // Столы
     Route::get('/tables/stats', [TableController::class, 'stats']);
     Route::apiResource('tables', TableController::class);
 
-    //  Добавляем роут статистики ВЫШЕ роута со сlug/id {guest}
+    // Гости (Спец-роуты строго ВЫШЕ apiResource!)
     Route::get('/guests/stats', GuestStatsController::class);
-    // Маршрут для массовой генерации пригласительных
-    Route::get('/guests/generate-invitations', [GuestController::class, 'generateAllInvitations']);
-    Route::post('/guests', [GuestController::class, 'store']);
-    Route::get('/guests', [GuestController::class, 'index']);
-    Route::get('/guests/{guest}', [GuestController::class, 'show']);
-    Route::patch('/guests/{guest}', [GuestController::class, 'update']);
-    Route::delete('/guests/{guest}', [GuestController::class, 'destroy']);
+    Route::get('/guests/generate-invitations', GenerateInvitationsController::class);
+
+    // Чистый CRUD
+    Route::apiResource('guests', GuestController::class);
 });
