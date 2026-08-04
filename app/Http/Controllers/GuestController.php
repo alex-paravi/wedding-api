@@ -13,7 +13,7 @@ class GuestController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Guest::query();
+        $query = Guest::with(['table', 'user']);
 
         if ($request->user()->role !== 'admin') {
             $query->where('user_id', $request->user()->id);
@@ -47,6 +47,8 @@ class GuestController extends Controller
     public function show(Guest $guest)
     {
         Gate::authorize('view', $guest);
+
+        $guest->load('table');
 
         return new GuestResource($guest);
     }

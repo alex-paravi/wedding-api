@@ -25,14 +25,7 @@ class GuestResource extends JsonResource
             // ID стола отдаем всегда (он может быть null, если гость не рассажен)
             'table_id' => $this->table_id,
 
-            // Информацию о самом столе отдаем ТОЛЬКО если ее запросили через with('table')
-            'table' => $this->whenLoaded('table', function () {
-                return $this->table ? [
-                    'id' => $this->table->id,
-                    'name' => $this->table->name, // Изменено с 'number' на 'name'
-                    'capacity' => $this->table->capacity,
-                ] : null;
-            }),
+            'table' => TableResource::make($this->whenLoaded('table')),
 
             'user_id' => $this->user_id,
 
