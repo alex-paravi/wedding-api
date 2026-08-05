@@ -92,4 +92,52 @@ class GuestTest extends TestCase
             'name' => $guest->name, // осталось старым
         ]);
     }
+    /**
+     * Проверяем, что валидация отсекает запрос без имени гостя.
+     */
+    public function test_create_guest_validation_fails_without_required_fields(): void
+    {
+        $user = User::factory()->create();
+
+        // Отправляем пустой массив
+        $response = $this->actingAs($user)
+            ->postJson('/api/guests', []);
+
+        // 1. Ожидаем 422 Unprocessable Entity
+        $response->assertStatus(422);
+
+        // 2. Проверяем, что в JSON ответа есть ошибка именно по полю 'name'
+        $response->assertJsonValidationErrors(['name']);
+    }
+
+    /**
+     * Проверяем, что фильтрация по стороне (side) возвращает только нужных гостей.
+     */
+    public function test_authenticated_user_can_filter_guests_by_side(): void
+    {
+        $user = User::factory()->create();
+
+        // Создаем одного гостя со стороны жениха, другого — со стороны невесты
+        Guest::factory()->create([
+            'user_id' => $user->id,
+            'name' => 'Гость Жениха',
+            'side' => 'groom',
+        ]);
+
+        Guest::factory()->create([
+            'user_id' => $user->id,
+            'name' => 'Гость Невесты',
+            'side' => 'bride',
+        ]);
+
+        // Делаем запрос с фильтром ?side=bride
+        $response = $this->actingAs($user)
+            ->getJson('/api/guests?side=bride');
+
+        $response->assertStatus(200);
+
+        // Утверждаем, что в ответе есть "Гость Невесты" и НЕТ "Гость Жениха"
+        $response->assertJsonFragment(['name' => 'Гость Невесты'])
+            ->assertJsonMissing(['name' => 'Гость Жениха']);
+    }
 }
