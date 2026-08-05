@@ -8,56 +8,791 @@
   },
   "item": [
     {
-      "name": "Get All Guests",
+      "name": "Guests",
+      "item": [
+        {
+          "name": "Get All Guests",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "",
+                  "const template = `",
+                  "<style>",
+                  "  body { font-family: Arial, sans-serif; padding: 16px; }",
+                  "  h2 { color: #333; }",
+                  "  table { border-collapse: collapse; width: 100%; }",
+                  "  th { background-color: #FF6C37; color: white; padding: 10px 14px; text-align: left; }",
+                  "  td { padding: 8px 14px; border-bottom: 1px solid #ddd; }",
+                  "  tr:hover { background-color: #f5f5f5; }",
+                  "  .confirmed { color: green; font-weight: bold; }",
+                  "  .not-confirmed { color: #999; }",
+                  "</style>",
+                  "<h2>Wedding Guest List ({{count}} guests)</h2>",
+                  "<table>",
+                  "  <thead>",
+                  "    <tr>",
+                  "      <th>#</th>",
+                  "      <th>Name</th>",
+                  "      <th>Confirmed</th>",
+                  "      <th>Created At</th>",
+                  "      <th>Updated At</th>",
+                  "    </tr>",
+                  "  </thead>",
+                  "  <tbody>",
+                  "    {{#each guests}}",
+                  "    <tr>",
+                  "      <td>{{id}}</td>",
+                  "      <td>{{name}}</td>",
+                  "      <td class=\"{{#if is_confirmed}}confirmed{{else}}not-confirmed{{/if}}\">",
+                  "        {{#if is_confirmed}}✔ Yes{{else}}✘ No{{/if}}",
+                  "      </td>",
+                  "      <td>{{created_at}}</td>",
+                  "      <td>{{updated_at}}</td>",
+                  "    </tr>",
+                  "    {{/each}}",
+                  "  </tbody>",
+                  "</table>",
+                  "`;",
+                  "",
+                  "pm.visualizer.set(template, {",
+                  "  guests: response,",
+                  "  count: response.length",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "packages": {},
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/guests",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "guests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Stats",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "",
+                  "const template = `",
+                  "<style>",
+                  "  body { font-family: Arial, sans-serif; padding: 16px; }",
+                  "  h2 { color: #333; }",
+                  "  table { border-collapse: collapse; width: 100%; }",
+                  "  th { background-color: #FF6C37; color: white; padding: 10px 14px; text-align: left; }",
+                  "  td { padding: 8px 14px; border-bottom: 1px solid #ddd; }",
+                  "  tr:hover { background-color: #f5f5f5; }",
+                  "  .confirmed { color: green; font-weight: bold; }",
+                  "  .not-confirmed { color: #999; }",
+                  "</style>",
+                  "<h2>Wedding Guest List ({{count}} guests)</h2>",
+                  "<table>",
+                  "  <thead>",
+                  "    <tr>",
+                  "      <th>#</th>",
+                  "      <th>Name</th>",
+                  "      <th>Confirmed</th>",
+                  "      <th>Created At</th>",
+                  "      <th>Updated At</th>",
+                  "    </tr>",
+                  "  </thead>",
+                  "  <tbody>",
+                  "    {{#each guests}}",
+                  "    <tr>",
+                  "      <td>{{id}}</td>",
+                  "      <td>{{name}}</td>",
+                  "      <td class=\"{{#if is_confirmed}}confirmed{{else}}not-confirmed{{/if}}\">",
+                  "        {{#if is_confirmed}}✔ Yes{{else}}✘ No{{/if}}",
+                  "      </td>",
+                  "      <td>{{created_at}}</td>",
+                  "      <td>{{updated_at}}</td>",
+                  "    </tr>",
+                  "    {{/each}}",
+                  "  </tbody>",
+                  "</table>",
+                  "`;",
+                  "",
+                  "pm.visualizer.set(template, {",
+                  "  guests: response,",
+                  "  count: response.length",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/guests/stats",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "guests",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Guest",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/guests/3",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "guests",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Guest",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Иван Иванов\",\r\n    \"side\": \"bride\",\r\n    \"category\": \"friend\",\r\n    \"status\": \"confirmed\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/guests",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "guests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TestRSVP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"confirmed\",\r\n    \"dietary_preferences\": \"Не ем морепродукты\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/invitations/DW5IikUnlMn9vyy7g0yG3s7hlBmqcIfl/rsvp",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "invitations",
+                "DW5IikUnlMn9vyy7g0yG3s7hlBmqcIfl",
+                "rsvp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Guest Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"category\": \"relative\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/guests/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "guests",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Guest",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/guests/2",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "guests",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Authorization",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Парсим ответ от сервера",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "// 2. Достаем токен (проверь, как именно он называется в твоем JSON-ответе: 'token' или 'plainTextToken')",
+                  "var token = jsonData.token; ",
+                  "",
+                  "// 3. Записываем в текущее окружение",
+                  "pm.environment.set(\"api_token\", token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/login",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tables",
+      "item": [
+        {
+          "name": "Get Tables List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "",
+                  "const template = `",
+                  "<style>",
+                  "  body { font-family: Arial, sans-serif; padding: 16px; }",
+                  "  h2 { color: #333; }",
+                  "  table { border-collapse: collapse; width: 100%; }",
+                  "  th { background-color: #FF6C37; color: white; padding: 10px 14px; text-align: left; }",
+                  "  td { padding: 8px 14px; border-bottom: 1px solid #ddd; }",
+                  "  tr:hover { background-color: #f5f5f5; }",
+                  "  .confirmed { color: green; font-weight: bold; }",
+                  "  .not-confirmed { color: #999; }",
+                  "</style>",
+                  "<h2>Wedding Guest List ({{count}} guests)</h2>",
+                  "<table>",
+                  "  <thead>",
+                  "    <tr>",
+                  "      <th>#</th>",
+                  "      <th>Name</th>",
+                  "      <th>Confirmed</th>",
+                  "      <th>Created At</th>",
+                  "      <th>Updated At</th>",
+                  "    </tr>",
+                  "  </thead>",
+                  "  <tbody>",
+                  "    {{#each guests}}",
+                  "    <tr>",
+                  "      <td>{{id}}</td>",
+                  "      <td>{{name}}</td>",
+                  "      <td class=\"{{#if is_confirmed}}confirmed{{else}}not-confirmed{{/if}}\">",
+                  "        {{#if is_confirmed}}✔ Yes{{else}}✘ No{{/if}}",
+                  "      </td>",
+                  "      <td>{{created_at}}</td>",
+                  "      <td>{{updated_at}}</td>",
+                  "    </tr>",
+                  "    {{/each}}",
+                  "  </tbody>",
+                  "</table>",
+                  "`;",
+                  "",
+                  "pm.visualizer.set(template, {",
+                  "  guests: response,",
+                  "  count: response.length",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/tables",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "tables"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Tables Stats",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "",
+                  "const template = `",
+                  "<style>",
+                  "  body { font-family: Arial, sans-serif; padding: 16px; }",
+                  "  h2 { color: #333; }",
+                  "  table { border-collapse: collapse; width: 100%; }",
+                  "  th { background-color: #FF6C37; color: white; padding: 10px 14px; text-align: left; }",
+                  "  td { padding: 8px 14px; border-bottom: 1px solid #ddd; }",
+                  "  tr:hover { background-color: #f5f5f5; }",
+                  "  .confirmed { color: green; font-weight: bold; }",
+                  "  .not-confirmed { color: #999; }",
+                  "</style>",
+                  "<h2>Wedding Guest List ({{count}} guests)</h2>",
+                  "<table>",
+                  "  <thead>",
+                  "    <tr>",
+                  "      <th>#</th>",
+                  "      <th>Name</th>",
+                  "      <th>Confirmed</th>",
+                  "      <th>Created At</th>",
+                  "      <th>Updated At</th>",
+                  "    </tr>",
+                  "  </thead>",
+                  "  <tbody>",
+                  "    {{#each guests}}",
+                  "    <tr>",
+                  "      <td>{{id}}</td>",
+                  "      <td>{{name}}</td>",
+                  "      <td class=\"{{#if is_confirmed}}confirmed{{else}}not-confirmed{{/if}}\">",
+                  "        {{#if is_confirmed}}✔ Yes{{else}}✘ No{{/if}}",
+                  "      </td>",
+                  "      <td>{{created_at}}</td>",
+                  "      <td>{{updated_at}}</td>",
+                  "    </tr>",
+                  "    {{/each}}",
+                  "  </tbody>",
+                  "</table>",
+                  "`;",
+                  "",
+                  "pm.visualizer.set(template, {",
+                  "  guests: response,",
+                  "  count: response.length",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/tables/stats",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "tables",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Table",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "",
+                  "const template = `",
+                  "<style>",
+                  "  body { font-family: Arial, sans-serif; padding: 16px; }",
+                  "  h2 { color: #333; }",
+                  "  table { border-collapse: collapse; width: 100%; }",
+                  "  th { background-color: #FF6C37; color: white; padding: 10px 14px; text-align: left; }",
+                  "  td { padding: 8px 14px; border-bottom: 1px solid #ddd; }",
+                  "  tr:hover { background-color: #f5f5f5; }",
+                  "  .confirmed { color: green; font-weight: bold; }",
+                  "  .not-confirmed { color: #999; }",
+                  "</style>",
+                  "<h2>Wedding Guest List ({{count}} guests)</h2>",
+                  "<table>",
+                  "  <thead>",
+                  "    <tr>",
+                  "      <th>#</th>",
+                  "      <th>Name</th>",
+                  "      <th>Confirmed</th>",
+                  "      <th>Created At</th>",
+                  "      <th>Updated At</th>",
+                  "    </tr>",
+                  "  </thead>",
+                  "  <tbody>",
+                  "    {{#each guests}}",
+                  "    <tr>",
+                  "      <td>{{id}}</td>",
+                  "      <td>{{name}}</td>",
+                  "      <td class=\"{{#if is_confirmed}}confirmed{{else}}not-confirmed{{/if}}\">",
+                  "        {{#if is_confirmed}}✔ Yes{{else}}✘ No{{/if}}",
+                  "      </td>",
+                  "      <td>{{created_at}}</td>",
+                  "      <td>{{updated_at}}</td>",
+                  "    </tr>",
+                  "    {{/each}}",
+                  "  </tbody>",
+                  "</table>",
+                  "`;",
+                  "",
+                  "pm.visualizer.set(template, {",
+                  "  guests: response,",
+                  "  count: response.length",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Стол №1\",\r\n    \"capacity\": 8,\r\n    \"user_id\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/tables",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "tables"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Generate invitations",
       "event": [
         {
           "listen": "test",
           "script": {
             "exec": [
-              "const response = pm.response.json();",
-              "",
-              "const template = `",
-              "<style>",
-              "  body { font-family: Arial, sans-serif; padding: 16px; }",
-              "  h2 { color: #333; }",
-              "  table { border-collapse: collapse; width: 100%; }",
-              "  th { background-color: #FF6C37; color: white; padding: 10px 14px; text-align: left; }",
-              "  td { padding: 8px 14px; border-bottom: 1px solid #ddd; }",
-              "  tr:hover { background-color: #f5f5f5; }",
-              "  .confirmed { color: green; font-weight: bold; }",
-              "  .not-confirmed { color: #999; }",
-              "</style>",
-              "<h2>Wedding Guest List ({{count}} guests)</h2>",
-              "<table>",
-              "  <thead>",
-              "    <tr>",
-              "      <th>#</th>",
-              "      <th>Name</th>",
-              "      <th>Confirmed</th>",
-              "      <th>Created At</th>",
-              "      <th>Updated At</th>",
-              "    </tr>",
-              "  </thead>",
-              "  <tbody>",
-              "    {{#each guests}}",
-              "    <tr>",
-              "      <td>{{id}}</td>",
-              "      <td>{{name}}</td>",
-              "      <td class=\"{{#if is_confirmed}}confirmed{{else}}not-confirmed{{/if}}\">",
-              "        {{#if is_confirmed}}✔ Yes{{else}}✘ No{{/if}}",
-              "      </td>",
-              "      <td>{{created_at}}</td>",
-              "      <td>{{updated_at}}</td>",
-              "    </tr>",
-              "    {{/each}}",
-              "  </tbody>",
-              "</table>",
-              "`;",
-              "",
-              "pm.visualizer.set(template, {",
-              "  guests: response,",
-              "  count: response.length",
-              "});"
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
             ],
             "type": "text/javascript",
             "packages": {},
@@ -75,36 +810,7 @@
           }
         ],
         "url": {
-          "raw": "http://127.0.0.1:8000/api/guests",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "guests"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Get Single Guest",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json",
-            "type": "text"
-          }
-        ],
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/guests/1",
+          "raw": "http://127.0.0.1:8000/api/guests/generate-invitations",
           "protocol": "http",
           "host": [
             "127",
@@ -116,127 +822,45 @@
           "path": [
             "api",
             "guests",
-            "1"
+            "generate-invitations"
           ]
         }
       },
       "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{api_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
     },
     {
-      "name": "Create Guest",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"name\": \"Тестовый Гость из Postman\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/guests",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "guests"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Update Guest Status",
-      "request": {
-        "method": "PATCH",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"is_confirmed\": 0\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/guests/5",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "guests",
-            "5"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Delete Guest",
-      "request": {
-        "method": "DELETE",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"is_confirmed\": 0\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/guests/5",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "guests",
-            "5"
-          ]
-        }
-      },
-      "response": []
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
     }
   ]
 }
