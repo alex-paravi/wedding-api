@@ -13,11 +13,8 @@ class GuestController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Guest::with(['table', 'user']);
-
-        if ($request->user()->role !== 'admin') {
-            $query->where('user_id', $request->user()->id);
-        }
+        Gate::authorize('viewAny', Guest::class);
+        $query = Guest::with(['table', 'user'])->visibleTo($request->user());
 
         $query->when($request->has('side'), function ($q) use ($request) {
             $q->where('side', $request->input('side'));
