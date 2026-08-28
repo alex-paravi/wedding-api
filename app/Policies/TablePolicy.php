@@ -9,7 +9,7 @@ class TablePolicy
 {
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
     public function view(User $user, Table $table): bool
     {
