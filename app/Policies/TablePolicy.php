@@ -13,7 +13,7 @@ class TablePolicy
     }
     public function view(User $user, Table $table): bool
     {
-        return $user->role === 'admin' || $user->id === $table->user_id;
+        return $user->isAdmin() || $user->id === $table->user_id;
     }
     public function create(User $user): bool
     {
@@ -21,10 +21,10 @@ class TablePolicy
     }
     public function update(User $user, Table $table): bool
     {
-        return $user->role === 'admin' || $user->id === $table->user_id;
+        return $user->isAdmin() || $user->id === $table->user_id;
     }
     public function delete(User $user, Table $table): bool
     {
-        return $user->role === 'admin' || $user->id === $table->user_id;
+        return $user->isAdmin() || $user->id === $table->user_id;
     }
 }

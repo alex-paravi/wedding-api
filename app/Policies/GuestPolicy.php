@@ -23,7 +23,7 @@ class GuestPolicy
     {
         // Администратор может смотреть любого гостя, 
         // а обычный юзер — только того, кого создал сам
-        return $user->role === 'admin' || $user->id === $guest->user_id;
+        return $user->isAdmin() || $user->id === $guest->user_id;
     }
 
     /**
@@ -39,7 +39,7 @@ class GuestPolicy
      */
     public function update(User $user, Guest $guest): bool
     {
-        if ($user->role === 'admin') {
+        if ($user->isAdmin()) {
             return true;
         }
         return $user->id === $guest->user_id;
@@ -50,7 +50,7 @@ class GuestPolicy
      */
     public function delete(User $user, Guest $guest): bool
     {
-        if ($user->role === 'admin') {
+        if ($user->isAdmin()) {
             return true;
         }
         return $user->id === $guest->user_id;
