@@ -8,6 +8,8 @@ use App\Http\Requests\StoreTableRequest;
 use App\Http\Requests\UpdateTableRequest;
 use App\Models\Guest;
 use App\Services\TableService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class TableController extends Controller
 {
@@ -15,10 +17,11 @@ class TableController extends Controller
         protected TableService $tableService
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        // Вместо ->get() используем ->paginate(10), указывая по сколько элементов выводить на страницу
-        $tables = Table::with('guests')->paginate(10);
+        Gate::authorize('viewAny', Table::class);
+        $query = Table::with(['guests', 'user'])->visibleTo($request->user());
+        $tables = $query->paginate(10);
         return TableResource::collection($tables);
     }
 
@@ -27,14 +30,16 @@ class TableController extends Controller
      */
     public function store(StoreTableRequest $request)
     {
-        // $request->validated() вернет только те данные, которые прошли проверку
-        $table = Table::create($request->validated());
-
+        Gate::authorize('create', Table::class);
+        $validated = $request->validated();
+        $validated['user_id'] = $request->user()->id;
+        $table = Table::create($validated);
         return new TableResource($table);
     }
 
     public function show(Table $table)
     {
+        Gate::authorize('view', $table);
         $table->load('guests');
         return new TableResource($table);
     }
@@ -44,6 +49,7 @@ class TableController extends Controller
      */
     public function update(UpdateTableRequest $request, Table $table)
     {
+        Gate::authorize('update', $table);
         $table->update($request->validated());
 
         return new TableResource($table);
@@ -51,6 +57,7 @@ class TableController extends Controller
 
     public function destroy(Table $table)
     {
+        Gate::authorize('delete', $table);
         $table->delete();
         return response()->json(null, 204);
     }

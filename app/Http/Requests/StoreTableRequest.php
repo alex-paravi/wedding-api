@@ -16,7 +16,6 @@ class StoreTableRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'capacity' => 'required|integer|min:1',
-            'user_id' => 'required|exists:users,id',
         ];
     }
     public function messages(): array
@@ -28,8 +27,6 @@ class StoreTableRequest extends FormRequest
             'capacity.required' => 'Укажите вместимость стола.',
             'capacity.integer' => 'Вместимость стола должна быть целым числом.',
             'capacity.min' => 'За столом должно быть как минимум 1 место.',
-            'user_id.required' => 'Необходимо указать ID создателя стола.',
-            'user_id.exists' => 'Указанный пользователь (создатель) не найден в системе.',
         ];
     }
 }
