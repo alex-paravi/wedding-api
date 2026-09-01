@@ -4,15 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Services\GuestStatsService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class GuestStatsController extends Controller
 {
     /**
      * Получить общую статистику по гостям и кейтерингу.
      */
-    public function __invoke(GuestStatsService $statsService): JsonResponse
+    public function __invoke(GuestStatsService $statsService, Request $request): JsonResponse
     {
-        $stats = $statsService->getSummaryStats();
+        $user = $request->user();
+        $stats = $statsService->getSummaryStats($user);
 
         return response()->json([
             'success' => true,
