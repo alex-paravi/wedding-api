@@ -6,6 +6,7 @@ use App\Models\Guest;
 use App\Services\Invitations\InvitationFactory;
 use App\Services\NotificationFactory;
 use Illuminate\Support\Collection;
+use App\Models\User;
 
 class InvitationService
 {
@@ -17,9 +18,9 @@ class InvitationService
     /**
      * Сгенерировать приглашения и отправить уведомления всем гостям.
      */
-    public function generateAndSendAll(): Collection
+    public function generateAndSendAll(User $user): Collection
     {
-        $guests = Guest::all();
+        $guests = Guest::visibleTo($user)->get();
 
         return $guests->map(function (Guest $guest) {
             $invitationWorker = $this->invitationFactory->make($guest);
