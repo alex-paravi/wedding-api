@@ -124,10 +124,13 @@ class TableControllerTest extends TestCase
         // 4. Проверяем статус ответа и точную структуру JSON данных
         $response->assertStatus(200)
             ->assertJson([
-                'total_tables' => 2,
-                'total_capacity' => 12,
-                'occupied_seats' => 4,
-                'free_seats' => 8,
+                'success' => true,
+                'data' => [
+                    'total_tables' => 2,
+                    'total_capacity' => 12,
+                    'occupied_seats' => 4,
+                    'free_seats' => 8,
+                ],
             ]);
     }
 }
