@@ -6,16 +6,11 @@ use App\Models\Table;
 use App\Http\Resources\TableResource;
 use App\Http\Requests\StoreTableRequest;
 use App\Http\Requests\UpdateTableRequest;
-use App\Models\Guest;
-use App\Services\TableService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class TableController extends Controller
 {
-    public function __construct(
-        protected TableService $tableService
-    ) {}
 
     public function index(Request $request)
     {
@@ -60,15 +55,5 @@ class TableController extends Controller
         Gate::authorize('delete', $table);
         $table->delete();
         return response()->json(null, 204);
-    }
-
-    public function stats()
-    {
-        // Контроллер больше ничего сам не считает! 
-        // Он просто просит сервис сделать расчеты
-        $stats = $this->tableService->getTableStatistics();
-
-        // И возвращает результат клиенту
-        return response()->json($stats);
     }
 }

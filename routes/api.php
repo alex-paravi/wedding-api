@@ -8,6 +8,7 @@ use App\Http\Controllers\TableController;
 use App\Http\Controllers\RsvpController;
 use App\Http\Controllers\GuestStatsController;
 use App\Http\Controllers\GenerateInvitationsController;
+use App\Http\Controllers\TableStatsController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/invitations/{token}/rsvp', RsvpController::class);
@@ -19,7 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Столы
-    Route::get('/tables/stats', [TableController::class, 'stats']);
+    Route::get('/tables/stats', TableStatsController::class);
     Route::apiResource('tables', TableController::class);
 
     // Гости (Спец-роуты строго ВЫШЕ apiResource!)
