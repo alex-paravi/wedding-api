@@ -5,7 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Override;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\GuestCategory;
 
 class UpdateGuestRequest extends FormRequest
 {
@@ -34,7 +35,7 @@ class UpdateGuestRequest extends FormRequest
             ],
             'phone' => ['nullable', 'string', 'max:20'],
             'side' => ['sometimes', 'string', Rule::in(['groom', 'bride'])],
-            'category' => ['sometimes', 'string', Rule::in(['friend', 'relative', 'colleague', 'family'])],
+            'category' => ['sometimes', new Enum(GuestCategory::class)],
             'status' => ['sometimes', 'string', Rule::in(['pending', 'confirmed', 'declined'])],
             'table_id' => ['sometimes', 'nullable', 'exists:tables,id'],
         ];
@@ -44,7 +45,7 @@ class UpdateGuestRequest extends FormRequest
         return [
             'name.regex' => 'Имя может содержать только буквы, пробелы и дефисы.',
             'side.in' => 'Сторона должна быть строго: groom (жених) или bride (невеста).',
-            'category.in' => 'Категория должна быть: friend, relative или colleague.',
+            'category.' . \Illuminate\Validation\Rules\Enum::class => 'Категория должна быть: friend, relative, colleague или family.',
             'status.in' => 'Статус должен быть: confirmed, pending или declined.',
             'table_id.exists' => 'Выбранного стола не существует в системе.',
         ];

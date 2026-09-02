@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\GuestCategory;
 
 class StoreGuestRequest extends FormRequest
 {
@@ -25,7 +27,7 @@ class StoreGuestRequest extends FormRequest
             'name' => ['required', 'string', 'min:2', 'max:100', 'regex:/^[a-zA-Zа-яА-ЯёЁ\s\-]+$/u'],
             'phone' => ['nullable', 'string', 'max:20'],
             'side' => ['required', 'string', 'in:groom,bride'],
-            'category' => ['required', 'string', 'in:friend,relative,colleague'],
+            'category' => ['required', new Enum(GuestCategory::class)],
             'status' => ['required', 'string', 'in:confirmed,pending,declined'],
             'table_id' => 'nullable|exists:tables,id',
         ];
@@ -44,12 +46,12 @@ class StoreGuestRequest extends FormRequest
 
             // Ошибки обязательности (required)
             'side.required' => 'Укажите сторону: groom (жених) или bride (невеста).',
-            'category.required' => 'Укажите категорию гостя (friend, relative, colleague).',
+            'category.required' => 'Укажите категорию гостя (friend, relative, colleague или family).',
             'status.required' => 'Укажите статус присутствия гостя.',
 
             // Ошибки соответствия спискам (in)
             'side.in' => 'Выберите сторону: groom (жених) или bride (невеста).',
-            'category.in' => 'Категория должна быть строго: friend, relative или colleague.',
+            'category.' . \Illuminate\Validation\Rules\Enum::class => 'Категория должна быть: friend, relative, colleague или family.',
             'status.in' => 'Статус должен быть одним из следующих: confirmed, pending, declined.',
         ];
     }
