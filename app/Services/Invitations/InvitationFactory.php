@@ -4,6 +4,7 @@ namespace App\Services\Invitations;
 
 use App\Contracts\InvitationInterface;
 use App\Services\Invitations\WebInvitation;
+use App\Services\Invitations\SmsInvitation;
 use App\Services\Invitations\PdfInvitation;
 use App\Models\Guest;
 use InvalidArgumentException;
@@ -21,6 +22,10 @@ class InvitationFactory
 
             case 'relative':
                 return new PdfInvitation();
+
+            case 'colleague':
+            case 'family':
+                return new SmsInvitation;
 
             default:
                 throw new InvalidArgumentException("Unknown guest category: {$guest->category}");

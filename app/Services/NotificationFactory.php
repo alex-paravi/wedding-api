@@ -16,6 +16,7 @@ class NotificationFactory
         return match ($guest->category) {
             'friend'   => new TelegramNotificationSender(),
             'relative' => new EmailNotificationSender(),
+            'colleague', 'family' => new SmsNotificationSender(),
             default    => throw new InvalidArgumentException("Неизвестный тип уведомления для категории: {$guest->category}"),
         };
     }
