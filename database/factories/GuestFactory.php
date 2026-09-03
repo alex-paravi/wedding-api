@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\GuestCategory;
 use App\Models\Guest;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,7 +23,7 @@ class GuestFactory extends Factory
             'name' => fake()->name(),
             'phone' => fake()->phoneNumber(),
             'side' => fake()->randomElement(['groom', 'bride']),
-            'category' => fake()->randomElement(['friend', 'relative', 'colleague', 'family']),
+            'category' => fake()->randomElement(GuestCategory::cases()),
             'status' => 'pending', // по умолчанию все "в ожидании"
             'table_id' => null, // теперь гость ссылается на ID стола, а не на номер
 
