@@ -22,7 +22,7 @@ class GuestFactory extends Factory
             'name' => fake()->name(),
             'phone' => fake()->phoneNumber(),
             'side' => fake()->randomElement(['groom', 'bride']),
-            'category' => fake()->randomElement(['friend', 'relative', 'colleague']),
+            'category' => fake()->randomElement(['friend', 'relative', 'colleague', 'family']),
             'status' => 'pending', // по умолчанию все "в ожидании"
             'table_id' => null, // теперь гость ссылается на ID стола, а не на номер
 
