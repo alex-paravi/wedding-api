@@ -140,4 +140,21 @@ class GuestTest extends TestCase
         $response->assertJsonFragment(['name' => 'Гость Невесты'])
             ->assertJsonMissing(['name' => 'Гость Жениха']);
     }
+    public function test_authenticated_user_can_generate_invitation(): void
+    {
+        $user = User::factory()->create();
+        Guest::factory()->create([
+            'category' => 'colleague',
+            'user_id' => $user->id,
+        ]);
+
+        Guest::factory()->create([
+            'category' => 'family',
+            'user_id' => $user->id,
+        ]);
+        $response = $this->actingAs($user)->getJson('/api/guests/generate-invitations');
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['category' => 'colleague']);
+        $response->assertJsonFragment(['category' => 'family']);
+    }
 }
