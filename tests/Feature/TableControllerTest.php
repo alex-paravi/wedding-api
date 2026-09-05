@@ -133,4 +133,24 @@ class TableControllerTest extends TestCase
                 ],
             ]);
     }
+    public function test_authenticated_user_cannot_update_someone_elses_table(): void
+    {
+        $userOwner = User::factory()->create();
+        $userStranger = User::factory()->create();
+
+        $table = Table::factory()->create([
+            'name' => 'Мой стол',
+            'user_id' => $userOwner->id,
+        ]);
+        $updateData = [
+            'name' => 'Теперь мой стол',
+        ];
+
+        $response = $this->actingAs($userStranger)->patchJson("/api/tables/{$table->id}", $updateData);
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('tables', [
+            'id' => $table->id,
+            'name' => 'Мой стол',
+        ]);
+    }
 }
