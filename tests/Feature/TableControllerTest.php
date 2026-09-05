@@ -7,6 +7,7 @@ use App\Models\Table;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Guest;
+use GuzzleHttp\Promise\Create;
 
 class TableControllerTest extends TestCase
 {
@@ -151,6 +152,26 @@ class TableControllerTest extends TestCase
         $this->assertDatabaseHas('tables', [
             'id' => $table->id,
             'name' => 'Мой стол',
+        ]);
+    }
+    public function test_admin_can_update_someone_elses_table(): void
+    {
+        $userOwner = User::factory()->create();
+        $userAdmin = User::factory()->create([
+            'role' => 'admin',
+        ]);
+        $table = Table::factory()->create([
+            'name' => 'Мой стол',
+            'user_id' => $userOwner->id,
+        ]);
+        $updateData = [
+            'name' => 'Теперь мой стол',
+        ];
+        $response = $this->actingAs($userAdmin)->patchJson("/api/tables/{$table->id}", $updateData);
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('tables', [
+            'id' => $table->id,
+            'name' => 'Теперь мой стол',
         ]);
     }
 }
