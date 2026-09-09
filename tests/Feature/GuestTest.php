@@ -157,4 +157,27 @@ class GuestTest extends TestCase
         $response->assertJsonFragment(['category' => 'colleague']);
         $response->assertJsonFragment(['category' => 'family']);
     }
+    public function test_guest_statistics_are_scoped_to_authenticated_user(): void
+    {
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+
+        $guest1 = Guest::factory()->create([
+            'user_id' => $user1->id,
+            'status' => 'confirmed',
+        ]);
+        $guest2 = Guest::factory()->create([
+            'user_id' => $user2->id,
+            'status' => 'confirmed',
+        ]);
+        $guest3 = Guest::factory()->create([
+            'user_id' => $user2->id,
+            'status' => 'confirmed',
+        ]);
+
+        $response = $this->actingAs($user2)->getJson("/api/guests/stats");
+        //dd($response->json());
+        $response->assertStatus(200);
+        $this->assertEquals(2, $response->json('data.overview.confirmed'));
+    }
 }
