@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Guest;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class GuestPolicy
 {
@@ -21,7 +20,7 @@ class GuestPolicy
      */
     public function view(User $user, Guest $guest): bool
     {
-        // Администратор может смотреть любого гостя, 
+        // Администратор может смотреть любого гостя,
         // а обычный юзер — только того, кого создал сам
         return $user->isAdmin() || $user->id === $guest->user_id;
     }
@@ -42,6 +41,7 @@ class GuestPolicy
         if ($user->isAdmin()) {
             return true;
         }
+
         return $user->id === $guest->user_id;
     }
 
@@ -53,6 +53,7 @@ class GuestPolicy
         if ($user->isAdmin()) {
             return true;
         }
+
         return $user->id === $guest->user_id;
     }
 

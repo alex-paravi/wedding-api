@@ -18,6 +18,7 @@ class StoreTableRequest extends FormRequest
             'capacity' => 'required|integer|min:1',
         ];
     }
+
     public function messages(): array
     {
         return [

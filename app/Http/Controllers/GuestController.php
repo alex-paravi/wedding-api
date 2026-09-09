@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGuestRequest;
 use App\Http\Requests\UpdateGuestRequest;
-use Illuminate\Http\Request;
-use App\Models\Guest;
 use App\Http\Resources\GuestResource;
+use App\Models\Guest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class GuestController extends Controller

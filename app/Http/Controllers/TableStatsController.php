@@ -6,7 +6,6 @@ use App\Services\TableStatsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-
 class TableStatsController extends Controller
 {
     public function __invoke(TableStatsService $statsService, Request $request): JsonResponse

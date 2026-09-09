@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guest;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class RsvpController extends Controller
 {
@@ -34,8 +34,8 @@ class RsvpController extends Controller
             'message' => 'Спасибо за ваш ответ!',
             'data' => [
                 'guest_name' => $guest->name,
-                'status'     => $guest->status,
-            ]
+                'status' => $guest->status,
+            ],
         ]);
     }
 }

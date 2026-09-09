@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
+use App\Enums\GuestCategory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
-use App\Enums\GuestCategory;
 
 class StoreGuestRequest extends FormRequest
 {
@@ -51,7 +50,7 @@ class StoreGuestRequest extends FormRequest
 
             // Ошибки соответствия спискам (in)
             'side.in' => 'Выберите сторону: groom (жених) или bride (невеста).',
-            'category.' . \Illuminate\Validation\Rules\Enum::class => 'Категория должна быть: friend, relative, colleague или family.',
+            'category.'.Enum::class => 'Категория должна быть: friend, relative, colleague или family.',
             'status.in' => 'Статус должен быть одним из следующих: confirmed, pending, declined.',
         ];
     }

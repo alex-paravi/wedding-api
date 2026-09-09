@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\InvitationService;
 use App\Http\Resources\GuestResource;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Services\InvitationService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class GenerateInvitationsController extends Controller
 {

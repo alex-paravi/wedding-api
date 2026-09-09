@@ -2,8 +2,8 @@
 
 namespace App\Models\Concerns;
 
-use Illuminate\Database\Eloquent\Builder;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 trait HasOwner
 {
@@ -12,6 +12,7 @@ trait HasOwner
         if ($user->isAdmin()) {
             return $query;
         }
+
         return $query->where('user_id', $user->id);
     }
 }

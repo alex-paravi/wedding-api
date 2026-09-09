@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\GuestCategory;
 use App\Models\Guest;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,9 +28,9 @@ class GuestFactory extends Factory
             'status' => 'pending', // по умолчанию все "в ожидании"
             'table_id' => null, // теперь гость ссылается на ID стола, а не на номер
 
-            // Магия: если мы не передали user_id руками, фабрика сама создаст 
+            // Магия: если мы не передали user_id руками, фабрика сама создаст
             // фейкового юзера "на лету" и возьмет его ID!
-            'user_id' => \App\Models\User::factory(),
+            'user_id' => User::factory(),
         ];
     }
 }

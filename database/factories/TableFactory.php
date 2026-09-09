@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Table;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Table>
+ * @extends Factory<Table>
  */
 class TableFactory extends Factory
 {
@@ -18,7 +19,7 @@ class TableFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => 'Стол №' . $this->faker->unique()->numberBetween(1, 50),
+            'name' => 'Стол №'.$this->faker->unique()->numberBetween(1, 50),
             'capacity' => $this->faker->numberBetween(4, 12),
             'user_id' => User::factory(), // Если ID не передан, фабрика сама создаст фейкового юзера
         ];

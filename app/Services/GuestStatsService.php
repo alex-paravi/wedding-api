@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Guest;
-use Illuminate\Support\Collection;
 use App\Models\User;
 
 class GuestStatsService

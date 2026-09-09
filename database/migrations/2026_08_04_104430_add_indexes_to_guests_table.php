@@ -16,6 +16,7 @@ return new class extends Migration
             $table->index(['user_id', 'status', 'side']);
         });
     }
+
     /**
      * Reverse the migrations.
      */

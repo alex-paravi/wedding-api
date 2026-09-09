@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Table;
-use App\Http\Resources\TableResource;
 use App\Http\Requests\StoreTableRequest;
 use App\Http\Requests\UpdateTableRequest;
+use App\Http\Resources\TableResource;
+use App\Models\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class TableController extends Controller
 {
-
     public function index(Request $request)
     {
         Gate::authorize('viewAny', Table::class);
         $query = Table::with(['guests', 'user'])->visibleTo($request->user());
         $tables = $query->paginate(10);
+
         return TableResource::collection($tables);
     }
 
@@ -29,6 +29,7 @@ class TableController extends Controller
         $validated = $request->validated();
         $validated['user_id'] = $request->user()->id;
         $table = Table::create($validated);
+
         return new TableResource($table);
     }
 
@@ -36,6 +37,7 @@ class TableController extends Controller
     {
         Gate::authorize('view', $table);
         $table->load('guests');
+
         return new TableResource($table);
     }
 
@@ -54,6 +56,7 @@ class TableController extends Controller
     {
         Gate::authorize('delete', $table);
         $table->delete();
+
         return response()->json(null, 204);
     }
 }

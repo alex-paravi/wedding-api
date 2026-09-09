@@ -2,12 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
+use App\Models\Guest;
 use App\Models\Table;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\Guest;
-use GuzzleHttp\Promise\Create;
 
 class TableControllerTest extends TestCase
 {
@@ -79,7 +78,7 @@ class TableControllerTest extends TestCase
         // Проверяем, что вернулось наше кастомное сообщение из StoreTableRequest
         $response->assertJsonValidationErrors(['name']);
         $response->assertJsonFragment([
-            'name' => ['Пожалуйста, укажите название или номер стола.']
+            'name' => ['Пожалуйста, укажите название или номер стола.'],
         ]);
     }
 
@@ -92,25 +91,25 @@ class TableControllerTest extends TestCase
         // Стол №1: вместимость 8
         $table1 = Table::factory()->create([
             'user_id' => $user->id,
-            'capacity' => 8
+            'capacity' => 8,
         ]);
 
         // Стол №2: вместимость 4
         $table2 = Table::factory()->create([
             'user_id' => $user->id,
-            'capacity' => 4
+            'capacity' => 4,
         ]);
 
         // Сажаем 3 гостей за первый стол
         Guest::factory()->count(3)->create([
             'user_id' => $user->id,
-            'table_id' => $table1->id
+            'table_id' => $table1->id,
         ]);
 
         // Сажаем 1 гостя за второй стол
         Guest::factory()->create([
             'user_id' => $user->id,
-            'table_id' => $table2->id
+            'table_id' => $table2->id,
         ]);
 
         // Итого мы ожидаем:
@@ -134,6 +133,7 @@ class TableControllerTest extends TestCase
                 ],
             ]);
     }
+
     public function test_authenticated_user_cannot_update_someone_elses_table(): void
     {
         $userOwner = User::factory()->create();
@@ -154,6 +154,7 @@ class TableControllerTest extends TestCase
             'name' => 'Мой стол',
         ]);
     }
+
     public function test_admin_can_update_someone_elses_table(): void
     {
         $userOwner = User::factory()->create();
@@ -174,6 +175,7 @@ class TableControllerTest extends TestCase
             'name' => 'Теперь мой стол',
         ]);
     }
+
     public function test_table_statistics_are_scoped_to_authenticated_user(): void
     {
         $user1 = User::factory()->create();

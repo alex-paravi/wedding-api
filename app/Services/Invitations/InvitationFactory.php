@@ -3,9 +3,6 @@
 namespace App\Services\Invitations;
 
 use App\Contracts\InvitationInterface;
-use App\Services\Invitations\WebInvitation;
-use App\Services\Invitations\SmsInvitation;
-use App\Services\Invitations\PdfInvitation;
 use App\Models\Guest;
 use InvalidArgumentException;
 
@@ -18,10 +15,10 @@ class InvitationFactory
     {
         switch ($guest->category) {
             case 'friend':
-                return new WebInvitation();
+                return new WebInvitation;
 
             case 'relative':
-                return new PdfInvitation();
+                return new PdfInvitation;
 
             case 'colleague':
             case 'family':

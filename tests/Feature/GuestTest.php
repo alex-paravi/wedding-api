@@ -2,16 +2,16 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Guest;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\User;
-use App\Models\Guest;
 
 class GuestTest extends TestCase
 {
     // ВОТ ОН! Говорим Laravel обновлять базу перед тестами
     use RefreshDatabase;
+
     /**
      * Проверяем, что неавторизованный пользователь получает 401 ошибку.
      */
@@ -39,7 +39,7 @@ class GuestTest extends TestCase
             'status' => 'pending',
         ];
 
-        // 3. Делаем POST-запрос, но с помощью метода actingAs() 
+        // 3. Делаем POST-запрос, но с помощью метода actingAs()
         // мы говорим Laravel: "Симулируй, что этот запрос отправляет наш $user"
         $response = $this->actingAs($user)
             ->postJson('/api/guests', $guestData);
@@ -53,7 +53,7 @@ class GuestTest extends TestCase
         // 6. ФИНАЛОЧКА: Проверяем, что в тестовой базе данных РЕАЛЬНО появилась эта запись
         $this->assertDatabaseHas('guests', [
             'name' => 'Иван Иванов',
-            'user_id' => $user->id // Проверяем, что контроллер правильно привязал ID юзера!
+            'user_id' => $user->id, // Проверяем, что контроллер правильно привязал ID юзера!
         ]);
     }
 
@@ -92,6 +92,7 @@ class GuestTest extends TestCase
             'name' => $guest->name, // осталось старым
         ]);
     }
+
     /**
      * Проверяем, что валидация отсекает запрос без имени гостя.
      */
@@ -140,6 +141,7 @@ class GuestTest extends TestCase
         $response->assertJsonFragment(['name' => 'Гость Невесты'])
             ->assertJsonMissing(['name' => 'Гость Жениха']);
     }
+
     public function test_authenticated_user_can_generate_invitation(): void
     {
         $user = User::factory()->create();
@@ -157,6 +159,7 @@ class GuestTest extends TestCase
         $response->assertJsonFragment(['category' => 'colleague']);
         $response->assertJsonFragment(['category' => 'family']);
     }
+
     public function test_guest_statistics_are_scoped_to_authenticated_user(): void
     {
         $user1 = User::factory()->create();
@@ -175,11 +178,12 @@ class GuestTest extends TestCase
             'status' => 'confirmed',
         ]);
 
-        $response = $this->actingAs($user2)->getJson("/api/guests/stats");
-        //dd($response->json());
+        $response = $this->actingAs($user2)->getJson('/api/guests/stats');
+        // dd($response->json());
         $response->assertStatus(200);
         $this->assertEquals(2, $response->json('data.overview.confirmed'));
     }
+
     public function test_guest_invitation_are_scoped_to_authenticated_user(): void
     {
         $user1 = User::factory()->create();
@@ -199,7 +203,7 @@ class GuestTest extends TestCase
         ]);
         $response = $this->actingAs($user2)->getJson('/api/guests/generate-invitations');
         $response->assertStatus(200);
-        //dd($response->json());
+        // dd($response->json());
         $response->assertJsonFragment(['name' => 'Guest2'])
             ->assertJsonFragment(['name' => 'Guest3'])
             ->assertJsonMissing(['name' => 'Guest1']);

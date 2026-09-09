@@ -2,13 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Table;
 use App\Models\Guest;
+use App\Models\Table;
 use App\Models\User;
 
 class TableStatsService
 {
-
     /**
      * Рассчитать сводную статистику по столам и местам
      */

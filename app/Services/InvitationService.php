@@ -3,10 +3,9 @@
 namespace App\Services;
 
 use App\Models\Guest;
-use App\Services\Invitations\InvitationFactory;
-use App\Services\NotificationFactory;
-use Illuminate\Support\Collection;
 use App\Models\User;
+use App\Services\Invitations\InvitationFactory;
+use Illuminate\Support\Collection;
 
 class InvitationService
 {

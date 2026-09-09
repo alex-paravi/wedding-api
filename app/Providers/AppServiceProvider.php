@@ -2,10 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Contracts\NotificationSenderInterface;
-use App\Services\EmailNotificationSender;
 use App\Services\TelegramNotificationSender;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {

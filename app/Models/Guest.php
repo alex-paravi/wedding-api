@@ -7,11 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 class Guest extends Model
 {
     use HasFactory, HasOwner;
-
 
     /**
      * Атрибуты, которые можно заполнять массово (Белый список).
