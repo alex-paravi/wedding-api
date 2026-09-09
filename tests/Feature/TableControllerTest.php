@@ -174,4 +174,26 @@ class TableControllerTest extends TestCase
             'name' => 'Теперь мой стол',
         ]);
     }
+    public function test_table_statistics_are_scoped_to_authenticated_user(): void
+    {
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+
+        $table1 = Table::factory()->create([
+            'user_id' => $user1->id,
+        ]);
+        $table2 = Table::factory()->create([
+            'user_id' => $user2->id,
+            'capacity' => 10,
+        ]);
+        $table3 = Table::factory()->create([
+            'user_id' => $user2->id,
+            'capacity' => 10,
+        ]);
+
+        $response = $this->actingAs($user2)->getJson('/api/tables/stats');
+        $response->assertStatus(200);
+        $this->assertEquals(2, $response->json('data.total_tables'));
+        $this->assertEquals(20, $response->json('data.total_capacity'));
+    }
 }
