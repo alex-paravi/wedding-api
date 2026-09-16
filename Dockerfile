@@ -6,6 +6,7 @@ COPY composer.json composer.lock ./
 
 RUN apt-get update && apt-get install -y \
     libzip-dev \
+    libonig-dev \
     unzip \
     git \
     && docker-php-ext-install pdo pdo_mysql mbstring
