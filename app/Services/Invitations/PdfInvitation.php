@@ -12,12 +12,11 @@ class PdfInvitation implements InvitationInterface
      */
     public function generate(Guest $guest): string
     {
-        // В реальном проекте здесь был бы вызов библиотеки вроде Barryvdh\DomPDF
-        // $pdf = PDF::loadView('emails.invitation', ['guest' => $guest]);
+        // Заглушка для демонстрации паттерна Factory.
 
         // Имитируем генерацию файла на сервере
-        $fileName = 'invitation_'.$guest->id.'.pdf';
-        $storagePath = 'storage/app/public/invitations/'.$fileName;
+        $fileName = 'invitation_' . $guest->id . '.pdf';
+        $storagePath = 'storage/app/public/invitations/' . $fileName;
 
         // Сервер выполняет инструкцию «сохранить файл на диск»
         // file_put_contents($storagePath, 'Контент PDF для ' . $guest->name);
