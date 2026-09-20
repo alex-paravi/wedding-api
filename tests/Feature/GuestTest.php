@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Guest;
 use App\Models\User;
+use App\Models\Table;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -207,5 +208,39 @@ class GuestTest extends TestCase
         $response->assertJsonFragment(['name' => 'Guest2'])
             ->assertJsonFragment(['name' => 'Guest3'])
             ->assertJsonMissing(['name' => 'Guest1']);
+    }
+    public function test_user_cannot_update_someone_elses_guest_tables_id(): void
+    {
+        $userOwner = User::factory()->create();
+        $userStranger = User::factory()->create();
+
+        $table1 = Table::factory()->create([
+            'id' => 1,
+            'user_id' => $userOwner->id,
+        ]);
+
+        $table2 = Table::factory()->create([
+            'id' => 2,
+            'user_id' => $userStranger->id,
+        ]);
+
+        $guest = Guest::factory()->create([
+            'user_id' => $userOwner->id,
+            'table_id' => $table1->id,
+        ]);
+
+        $updateData = [
+            'table_id' => $table2->id,
+        ];
+
+        $response = $this->actingAs($userOwner)
+            ->patchJson("api/guests/{$guest->id}", $updateData);
+
+        $response->assertStatus(422);
+
+        $this->assertDatabaseHas('guests', [
+            'id' => $guest->id,
+            'table_id' => $table1->id,
+        ]);
     }
 }

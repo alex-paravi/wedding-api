@@ -37,7 +37,11 @@ class UpdateGuestRequest extends FormRequest
             'side' => ['sometimes', 'string', Rule::in(['groom', 'bride'])],
             'category' => ['sometimes', new Enum(GuestCategory::class)],
             'status' => ['sometimes', 'string', Rule::in(['pending', 'confirmed', 'declined'])],
-            'table_id' => ['sometimes', 'nullable', 'exists:tables,id'],
+            'table_id' => [
+                'sometimes',
+                'nullable',
+                Rule::exists('tables', 'id')->where('user_id', $this->user()->id)
+            ],
         ];
     }
 
@@ -46,7 +50,7 @@ class UpdateGuestRequest extends FormRequest
         return [
             'name.regex' => 'Имя может содержать только буквы, пробелы и дефисы.',
             'side.in' => 'Сторона должна быть строго: groom (жених) или bride (невеста).',
-            'category.'.Enum::class => 'Категория должна быть: friend, relative, colleague или family.',
+            'category.' . Enum::class => 'Категория должна быть: friend, relative, colleague или family.',
             'status.in' => 'Статус должен быть: confirmed, pending или declined.',
             'table_id.exists' => 'Выбранного стола не существует в системе.',
         ];
