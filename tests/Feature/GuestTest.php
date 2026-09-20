@@ -61,9 +61,7 @@ class GuestTest extends TestCase
     /**
      * Проверяем, что юзер не может обновить чужого гостя.
      */
-    /**
-     * Проверяем, что юзер не может обновить чужого гостя.
-     */
+
     public function test_user_cannot_update_someone_elses_guest(): void
     {
         // 1. Создаём двух разных пользователей

@@ -5,6 +5,7 @@ namespace App\Services\Invitations;
 use App\Contracts\InvitationInterface;
 use App\Models\Guest;
 use InvalidArgumentException;
+use App\Enums\GuestCategory;
 
 class InvitationFactory
 {
@@ -14,18 +15,18 @@ class InvitationFactory
     public function make(Guest $guest): InvitationInterface
     {
         switch ($guest->category) {
-            case 'friend':
+            case GuestCategory::Friend:
                 return new WebInvitation;
 
-            case 'relative':
+            case GuestCategory::Relative:
                 return new PdfInvitation;
 
-            case 'colleague':
-            case 'family':
+            case GuestCategory::Colleague:
+            case GuestCategory::Family:
                 return new SmsInvitation;
 
             default:
-                throw new InvalidArgumentException("Unknown guest category: {$guest->category}");
+                throw new InvalidArgumentException("Unknown guest category: {$guest->category->value}");
         }
     }
 }

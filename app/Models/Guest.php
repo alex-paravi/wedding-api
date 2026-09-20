@@ -6,6 +6,7 @@ use App\Models\Concerns\HasOwner;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\GuestCategory;
 
 /**
  * @property int $id
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $name
  * @property string|null $phone
  * @property string $side
- * @property string $category
+ * @property \App\Enums\GuestCategory $category
  * @property string $status
  * @property int|null $table_id
  * @property string|null $invitation_token
@@ -60,7 +61,12 @@ class Guest extends Model
         'invitation_token',
         'dietary_preferences',
     ];
-
+    protected function casts(): array
+    {
+        return [
+            'category' => GuestCategory::class,
+        ];
+    }
     /**
      * Связь: Гость принадлежит пользователю (создателю).
      * Это позволит в коде легко получать автора: $guest->user
