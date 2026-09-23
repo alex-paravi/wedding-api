@@ -28,6 +28,7 @@ return new class extends Migration
             // Пожелания по меню или информация об аллергиях
             $table->string('dietary_preferences')->nullable();
             $table->timestamps();
+            $table->boolean('is_notified')->default(false);
         });
     }
 

@@ -11,7 +11,7 @@ use App\Models\User;
 class SendGuestInvitationJob implements ShouldQueue
 {
     use Queueable;
-    protected Guest $guest;
+    public Guest $guest;
 
 
     public function __construct(Guest $guest)

@@ -60,11 +60,13 @@ class Guest extends Model
         'table_id',
         'invitation_token',
         'dietary_preferences',
+        'is_notified',
     ];
     protected function casts(): array
     {
         return [
             'category' => GuestCategory::class,
+            'is_notified' => 'boolean',
         ];
     }
     /**

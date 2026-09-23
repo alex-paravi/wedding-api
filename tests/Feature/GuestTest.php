@@ -7,6 +7,9 @@ use App\Models\User;
 use App\Models\Table;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Queue;
+use App\Jobs\SendGuestInvitationJob;
+use App\Services\InvitationService;
 
 class GuestTest extends TestCase
 {
@@ -154,9 +157,8 @@ class GuestTest extends TestCase
             'user_id' => $user->id,
         ]);
         $response = $this->actingAs($user)->getJson('/api/guests/generate-invitations');
-        $response->assertStatus(200);
-        $response->assertJsonFragment(['category' => 'colleague']);
-        $response->assertJsonFragment(['category' => 'family']);
+        $response->assertStatus(202);
+        $response->assertJsonFragment(['message' => 'Рассылка приглашений поставлена в очередь.']);
     }
 
     public function test_guest_statistics_are_scoped_to_authenticated_user(): void
@@ -201,11 +203,9 @@ class GuestTest extends TestCase
             'name' => 'Guest3',
         ]);
         $response = $this->actingAs($user2)->getJson('/api/guests/generate-invitations');
-        $response->assertStatus(200);
+        $response->assertStatus(202);
         // dd($response->json());
-        $response->assertJsonFragment(['name' => 'Guest2'])
-            ->assertJsonFragment(['name' => 'Guest3'])
-            ->assertJsonMissing(['name' => 'Guest1']);
+        $response->assertJsonFragment(['message' => 'Рассылка приглашений поставлена в очередь.']);
     }
     public function test_user_cannot_update_someone_elses_guest_tables_id(): void
     {
@@ -240,5 +240,44 @@ class GuestTest extends TestCase
             'id' => $guest->id,
             'table_id' => $table1->id,
         ]);
+    }
+    public function test_generate_invitations_dispatches_job_for_each_guest(): void
+    {
+        Queue::fake();
+
+        $user = User::factory()->create();
+
+        $guest1 = Guest::factory()->create(['user_id' => $user->id]);
+        $guest2 = Guest::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->actingAs($user)
+            ->getJson('/api/guests/generate-invitations');
+
+        $response->assertStatus(202);
+
+        Queue::assertPushed(SendGuestInvitationJob::class, 2);
+
+        Queue::assertPushed(SendGuestInvitationJob::class, function ($job) use ($guest1) {
+            return $job->guest->id === $guest1->id;
+        });
+
+        Queue::assertPushed(SendGuestInvitationJob::class, function ($job) use ($guest2) {
+            return $job->guest->id === $guest2->id;
+        });
+    }
+    public function test_send_invitation_to_generates_link_and_marks_guest_notified(): void
+    {
+        $user = User::factory()->create();
+        $guest = Guest::factory()->create([
+            'user_id' => $user->id,
+            'category' => 'friend',
+            'is_notified' => false,
+        ]);
+
+        $service = app(InvitationService::class);
+        $service->sendInvitationTo($guest);
+
+        $guest->refresh();
+        $this->assertTrue($guest->is_notified);
     }
 }
