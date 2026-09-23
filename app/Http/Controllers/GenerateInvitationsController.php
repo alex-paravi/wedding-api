@@ -5,15 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Resources\GuestResource;
 use App\Services\InvitationService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\JsonResponse;
 
 class GenerateInvitationsController extends Controller
 {
-    public function __invoke(InvitationService $invitationService, Request $request): AnonymousResourceCollection
+    public function __invoke(InvitationService $invitationService, Request $request): JsonResponse
     {
         $user = $request->user();
-        $processedGuests = $invitationService->generateAndSendAll($user);
+        $invitationService->generateAndSendAll($user);
 
-        return GuestResource::collection($processedGuests);
+        return response()->json([
+            'message' => 'Рассылка приглашений поставлена в очередь.',
+        ], 202);
     }
 }
