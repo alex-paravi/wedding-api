@@ -9,7 +9,7 @@ REST API для организаторов свадеб: учёт гостей, 
 - MySQL 8.0
 - Laravel Sanctum (токен-авторизация)
 - Docker / Docker Compose (nginx + PHP-FPM + MySQL)
-- Pest / PHPUnit — 18 feature-тестов
+- Pest / PHPUnit — 22 feature-тестов
 - Larastan (PHPStan) + Laravel Pint
 
 ## Возможности
@@ -74,7 +74,7 @@ docker exec wedding_api_app php artisan test
 | PATCH  | \`/api/guests/{id}\`                 | Обновить гостя                                                                |
 | DELETE | \`/api/guests/{id}\`                 | Удалить гостя                                                                 |
 | GET    | \`/api/guests/stats\`                | Сводная статистика по гостям и питанию                                        |
-| GET    | \`/api/guests/generate-invitations\` | Поставить в очередь рассылку приглашений всем своим гостям (\`202 Accepted\`) |
+| POST   | \`/api/guests/generate-invitations\` | Поставить в очередь рассылку приглашений всем своим гостям (\`202 Accepted\`) |
 
 ### Столы
 
