@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\GuestCategory;
 use App\Models\Concerns\HasOwner;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Enums\GuestCategory;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -14,15 +15,16 @@ use App\Enums\GuestCategory;
  * @property string $name
  * @property string|null $phone
  * @property string $side
- * @property \App\Enums\GuestCategory $category
+ * @property GuestCategory $category
  * @property string $status
  * @property int|null $table_id
  * @property string|null $invitation_token
  * @property string|null $dietary_preferences
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Table|null $table
- * @property-read \App\Models\User $user
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Table|null $table
+ * @property-read User $user
+ *
  * @method static \Database\Factories\GuestFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Guest newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Guest newQuery()
@@ -40,6 +42,7 @@ use App\Enums\GuestCategory;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Guest whereTableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Guest whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Guest whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class Guest extends Model
@@ -62,6 +65,7 @@ class Guest extends Model
         'dietary_preferences',
         'is_notified',
     ];
+
     protected function casts(): array
     {
         return [
@@ -69,6 +73,7 @@ class Guest extends Model
             'is_notified' => 'boolean',
         ];
     }
+
     /**
      * Связь: Гость принадлежит пользователю (создателю).
      * Это позволит в коде легко получать автора: $guest->user

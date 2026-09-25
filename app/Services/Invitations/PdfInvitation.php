@@ -15,8 +15,8 @@ class PdfInvitation implements InvitationInterface
         // Заглушка для демонстрации паттерна Factory.
 
         // Имитируем генерацию файла на сервере
-        $fileName = 'invitation_' . $guest->id . '.pdf';
-        $storagePath = 'storage/app/public/invitations/' . $fileName;
+        $fileName = 'invitation_'.$guest->id.'.pdf';
+        $storagePath = 'storage/app/public/invitations/'.$fileName;
 
         // Сервер выполняет инструкцию «сохранить файл на диск»
         // file_put_contents($storagePath, 'Контент PDF для ' . $guest->name);

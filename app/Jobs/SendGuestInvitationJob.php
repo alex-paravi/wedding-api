@@ -6,13 +6,12 @@ use App\Models\Guest;
 use App\Services\InvitationService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use App\Models\User;
 
 class SendGuestInvitationJob implements ShouldQueue
 {
     use Queueable;
-    public Guest $guest;
 
+    public Guest $guest;
 
     public function __construct(Guest $guest)
     {

@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
+use App\Jobs\SendGuestInvitationJob;
 use App\Models\Guest;
 use App\Models\User;
 use App\Services\Invitations\InvitationFactory;
-use App\Jobs\SendGuestInvitationJob;
 
 class InvitationService
 {
@@ -13,8 +13,6 @@ class InvitationService
         protected InvitationFactory $invitationFactory,
         protected NotificationFactory $notificationFactory
     ) {}
-
-
 
     public function sendInvitationTo(Guest $guest): void
     {
@@ -30,6 +28,7 @@ class InvitationService
             'is_notified' => $isSent,
         ]);
     }
+
     public function generateAndSendAll(User $user): void
     {
         $guests = Guest::visibleTo($user)->get();

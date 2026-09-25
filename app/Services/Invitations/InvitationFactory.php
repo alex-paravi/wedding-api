@@ -3,9 +3,9 @@
 namespace App\Services\Invitations;
 
 use App\Contracts\InvitationInterface;
+use App\Enums\GuestCategory;
 use App\Models\Guest;
 use InvalidArgumentException;
-use App\Enums\GuestCategory;
 
 class InvitationFactory
 {

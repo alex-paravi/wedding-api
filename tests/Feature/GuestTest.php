@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use App\Models\Guest;
-use App\Models\User;
-use App\Models\Table;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use Illuminate\Support\Facades\Queue;
 use App\Jobs\SendGuestInvitationJob;
+use App\Models\Guest;
+use App\Models\Table;
+use App\Models\User;
 use App\Services\InvitationService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Queue;
+use Tests\TestCase;
 
 class GuestTest extends TestCase
 {
@@ -64,7 +64,6 @@ class GuestTest extends TestCase
     /**
      * Проверяем, что юзер не может обновить чужого гостя.
      */
-
     public function test_user_cannot_update_someone_elses_guest(): void
     {
         // 1. Создаём двух разных пользователей
@@ -207,6 +206,7 @@ class GuestTest extends TestCase
         // dd($response->json());
         $response->assertJsonFragment(['message' => 'Рассылка приглашений поставлена в очередь.']);
     }
+
     public function test_user_cannot_update_someone_elses_guest_tables_id(): void
     {
         $userOwner = User::factory()->create();
@@ -241,6 +241,7 @@ class GuestTest extends TestCase
             'table_id' => $table1->id,
         ]);
     }
+
     public function test_generate_invitations_dispatches_job_for_each_guest(): void
     {
         Queue::fake();
@@ -265,6 +266,7 @@ class GuestTest extends TestCase
             return $job->guest->id === $guest2->id;
         });
     }
+
     public function test_send_invitation_to_generates_link_and_marks_guest_notified(): void
     {
         $user = User::factory()->create();
