@@ -156,7 +156,7 @@ class GuestTest extends TestCase
             'category' => 'family',
             'user_id' => $user->id,
         ]);
-        $response = $this->actingAs($user)->getJson('/api/guests/generate-invitations');
+        $response = $this->actingAs($user)->postJson('/api/guests/generate-invitations');
         $response->assertStatus(202);
         $response->assertJsonFragment(['message' => 'Рассылка приглашений поставлена в очередь.']);
     }
@@ -202,7 +202,7 @@ class GuestTest extends TestCase
             'user_id' => $user2->id,
             'name' => 'Guest3',
         ]);
-        $response = $this->actingAs($user2)->getJson('/api/guests/generate-invitations');
+        $response = $this->actingAs($user2)->postJson('/api/guests/generate-invitations');
         $response->assertStatus(202);
         // dd($response->json());
         $response->assertJsonFragment(['message' => 'Рассылка приглашений поставлена в очередь.']);
@@ -251,7 +251,7 @@ class GuestTest extends TestCase
         $guest2 = Guest::factory()->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)
-            ->getJson('/api/guests/generate-invitations');
+            ->postJson('/api/guests/generate-invitations');
 
         $response->assertStatus(202);
 

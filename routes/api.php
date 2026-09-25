@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Гости (Спец-роуты строго ВЫШЕ apiResource!)
     Route::get('/guests/stats', GuestStatsController::class);
-    Route::get('/guests/generate-invitations', GenerateInvitationsController::class);
+    Route::post('/guests/generate-invitations', GenerateInvitationsController::class);
 
     // Чистый CRUD
     Route::apiResource('guests', GuestController::class);

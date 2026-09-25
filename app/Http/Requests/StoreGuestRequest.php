@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use App\Enums\GuestCategory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Rule;
+
 
 class StoreGuestRequest extends FormRequest
 {
@@ -28,7 +30,11 @@ class StoreGuestRequest extends FormRequest
             'side' => ['required', 'string', 'in:groom,bride'],
             'category' => ['required', new Enum(GuestCategory::class)],
             'status' => ['required', 'string', 'in:confirmed,pending,declined'],
-            'table_id' => 'nullable|exists:tables,id',
+            'table_id' => [
+                'sometimes',
+                'nullable',
+                Rule::exists('tables', 'id')->where('user_id', $this->user()->id)
+            ],
         ];
     }
 
@@ -50,7 +56,7 @@ class StoreGuestRequest extends FormRequest
 
             // Ошибки соответствия спискам (in)
             'side.in' => 'Выберите сторону: groom (жених) или bride (невеста).',
-            'category.'.Enum::class => 'Категория должна быть: friend, relative, colleague или family.',
+            'category.' . Enum::class => 'Категория должна быть: friend, relative, colleague или family.',
             'status.in' => 'Статус должен быть одним из следующих: confirmed, pending, declined.',
         ];
     }
